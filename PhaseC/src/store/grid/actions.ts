@@ -17,13 +17,13 @@ export const addRow: ActionCreator<AddRowAction> = (state: GridState, row: numbe
     for(let col = 0; col < state.columns; col++) {
         r = [...r, {content : "", color : "WHITE"}]
     }
-    const new_grid = [...state.grid.slice(0, row), r, ...state.grid.slice(row)]; // [...state.grid.slice(0, row + 1), r, ...state.grid.slice(row + 1)];
+    const new_grid = [...state.grid.slice(0, row), r, ...state.grid.slice(row)];
   
   return {
     type: '@@grid/ADD_ROW',
     payload: {
       grid : new_grid,
-      rows : state.rows++
+      rows : state.rows + 1
     }
   }
 };
@@ -39,19 +39,28 @@ export const addColumn: ActionCreator<AddColumnAction> = (state: GridState, col:
     type: '@@grid/ADD_COLUMN',
     payload: {
       grid: new_grid,
-      columns: state.columns++
+      columns: state.columns + 1
     }
   }
 };
 
 export const deleteRow: ActionCreator<DeleteRowAction> = (state: GridState, row: number) => {
+  if (state.rows === 1) {
+    return {
+      type: '@@grid/DELETE_ROW',
+      payload: {
+        grid: state.grid,
+        rows: state.rows 
+      }
+    }
+  }
   const new_grid = [...state.grid.slice(0, row), ...state.grid.slice(row + 1)];
 
   return {
     type: '@@grid/DELETE_ROW',
     payload: {
       grid: new_grid,
-      rows: state.rows--
+      rows: state.rows - 1
     }
   }
 };

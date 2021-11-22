@@ -1,14 +1,14 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from './store'
-import { addColumn, addRow } from './store/grid/actions'
+import { addColumn, addRow, deleteRow } from './store/grid/actions'
 
 function App() {
   const dispatch = useDispatch();
   const grid = useSelector((state : ApplicationState) => state.grid)
 
   const test = () => {
-    dispatch(addRow(grid, 0))
+    dispatch(deleteRow(grid, 0))
   }
   return (
     <div>

@@ -1,14 +1,14 @@
 import { Reducer } from 'redux';
 import { GridState, GridActions, Cell } from './types';
 
-const numRows: number = 1;
-const numColumns: number = 2;
+const NUM_ROWS: number = 10;
+const NUM_COLUMNS: number = 2;
 
 const makeCells = () => {
   var grid : Cell[][] = [];
-  for (let row = 0; row < numRows; row++) {
+  for (let row = 0; row < NUM_ROWS; row++) {
       var r : Cell[] = [];
-    for (let col = 0; col < numColumns; col++) {
+    for (let col = 0; col < NUM_COLUMNS; col++) {
       r = [...r, {content : "", color : "WHITE"}]
     }
     grid = [...grid, r];
@@ -19,8 +19,8 @@ const makeCells = () => {
 // Type-safe initialState!
 export const initialState: GridState = {
   grid: makeCells(),
-  rows: numRows,
-  columns: numColumns
+  rows: NUM_ROWS,
+  columns: NUM_COLUMNS
 };
 
 // Unfortunately, typing of the `action` parameter seems to be broken at the moment.
