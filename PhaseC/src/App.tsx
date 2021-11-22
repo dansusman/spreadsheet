@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from './store'
-import { addRow } from './store/grid/actions'
+import { addColumn, addRow } from './store/grid/actions'
 
 function App() {
   const dispatch = useDispatch();

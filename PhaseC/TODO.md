@@ -3,7 +3,7 @@
 ## Core
 - [x] addRow
 - [ ] deleteRow
-- [ ] addCol
+- [x] addCol
 - [ ] deleteCol
 - [ ] addText
 - [ ] clearText
