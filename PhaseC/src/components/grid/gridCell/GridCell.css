@@ -1,12 +1,3 @@
-.row {
-    display: flex;
-}
-
-.grid {
-    display: flex;
-    flex-direction: column;
-}
-
 .cell {
     margin: 5px;
     height: 20px;

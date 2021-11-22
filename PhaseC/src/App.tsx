@@ -1,7 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ApplicationState } from "./store";
-import "./app.css";
 import {
     addColumn,
     addRow,
@@ -10,6 +9,7 @@ import {
     redo,
     undo,
 } from "./store/grid/actions";
+import Grid from "./components/grid";
 
 function App() {
     const dispatch = useDispatch();
@@ -24,15 +24,8 @@ function App() {
             </div>
             <div onClick={() => dispatch(addRow(grid, 0))}>ADD ROW</div>
             <div onClick={() => dispatch(deleteRow(grid, 0))}>DELETE ROW</div>
-            <div className="grid">
-                {grid.grid.map((row, rowKey) => (
-                    <div className="row" key={rowKey}>
-                        {row.map((cell, cellKey) => (
-                            <div className="cell" key={cellKey}></div>
-                        ))}
-                    </div>
-                ))}
-            </div>
+            <Grid grid={grid.grid} />
+
             {JSON.stringify(grid.grid)}
             <div>COLUMNS: {grid.columns}</div>
             <div>ROWS: {grid.rows}</div>
