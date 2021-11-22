@@ -69,10 +69,19 @@ export interface RedoAction extends Action {
     };
 }
 
+export interface ReplaceContentAction extends Action {
+    type: "@@grid/REPLACE_CONTENT";
+    payload: {
+        grid: Cell[][];
+        undoStack: GridHistory[];
+    };
+}
+
 export type GridActions =
     | AddRowAction
     | AddColumnAction
     | DeleteRowAction
     | DeleteColumnAction
     | UndoAction
-    | RedoAction;
+    | RedoAction
+    | ReplaceContentAction;

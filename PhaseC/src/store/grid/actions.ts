@@ -8,6 +8,7 @@ import {
     DeleteColumnAction,
     UndoAction,
     RedoAction,
+    ReplaceContentAction,
 } from "./types";
 
 export const addRow: ActionCreator<AddRowAction> = (
@@ -108,8 +109,8 @@ export const deleteColumn: ActionCreator<DeleteColumnAction> = (
     var newGrid: Cell[][] = [];
     for (let row = 0; row < state.rows; row++) {
         const newRow = [
-            ...state.grid[row].slice(0, row),
-            ...state.grid[row].slice(row + 1),
+            ...state.grid[row].slice(0, col),
+            ...state.grid[row].slice(col + 1),
         ];
         newGrid = [...newGrid, newRow];
     }
@@ -170,6 +171,29 @@ export const redo: ActionCreator<RedoAction> = (state: GridState) => {
                 undoStack: [...state.undoStack, state],
                 redoStack: newRedo,
             },
+        },
+    };
+};
+
+export const replaceContent: ActionCreator<ReplaceContentAction> = (
+    state: GridState,
+    content: string,
+    rowNum: number,
+    colNum: number
+) => {
+    const newGrid = JSON.parse(JSON.stringify(state.grid));
+    console.log(newGrid);
+    const cell = newGrid[rowNum][colNum];
+    newGrid[rowNum][colNum] = { ...cell, content };
+
+    return {
+        type: "@@grid/REPLACE_CONTENT",
+        payload: {
+            grid: newGrid,
+            undoStack: [
+                ...state.undoStack,
+                { grid: state.grid, columns: state.columns, rows: state.rows },
+            ],
         },
     };
 };

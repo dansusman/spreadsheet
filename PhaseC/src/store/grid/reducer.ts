@@ -77,6 +77,13 @@ const reducer: Reducer<GridState> = (
                 ...state,
                 ...action.payload.state,
             };
+        case "@@grid/REPLACE_CONTENT":
+            return {
+                ...state,
+                grid: action.payload.grid,
+                undoStack: action.payload.undoStack,
+                redoStack: [],
+            };
         default:
             return state;
     }

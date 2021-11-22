@@ -7,6 +7,7 @@ import {
     deleteColumn,
     deleteRow,
     redo,
+    replaceContent,
     undo,
 } from "./store/grid/actions";
 import Grid from "./components/grid";
@@ -24,6 +25,13 @@ function App() {
             </div>
             <div onClick={() => dispatch(addRow(grid, 0))}>ADD ROW</div>
             <div onClick={() => dispatch(deleteRow(grid, 0))}>DELETE ROW</div>
+            <div
+                onClick={() =>
+                    dispatch(replaceContent(grid, "hello world", 0, 0))
+                }
+            >
+                Add Text
+            </div>
             <Grid grid={grid.grid} />
 
             {JSON.stringify(grid.grid)}
