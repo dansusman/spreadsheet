@@ -1,66 +1,175 @@
- import { ActionCreator } from 'redux';
+import { ActionCreator } from "redux";
 import {
-  AddRowAction,
-  AddColumnAction,
-  DeleteRowAction,
-  GridState,
-  Cell
-} from './types';
+    AddRowAction,
+    AddColumnAction,
+    DeleteRowAction,
+    GridState,
+    Cell,
+    DeleteColumnAction,
+    UndoAction,
+    RedoAction,
+} from "./types";
 
-// Type these action creators with `: ActionCreator<ActionTypeYouWantToPass>`.
-// Remember, you can also pass parameters into an action creator. Make sure to
-// type them properly.
-
-
-export const addRow: ActionCreator<AddRowAction> = (state: GridState, row: number) => {
-    var r : Cell[] = [];
-    for(let col = 0; col < state.columns; col++) {
-        r = [...r, {content : "", color : "WHITE"}]
+export const addRow: ActionCreator<AddRowAction> = (
+    state: GridState,
+    row: number
+) => {
+    var r: Cell[] = [];
+    for (let col = 0; col < state.columns; col++) {
+        r = [...r, { content: "", color: "WHITE" }];
     }
     const new_grid = [...state.grid.slice(0, row), r, ...state.grid.slice(row)];
-  
-  return {
-    type: '@@grid/ADD_ROW',
-    payload: {
-      grid : new_grid,
-      rows : state.rows + 1
-    }
-  }
-};
 
-export const addColumn: ActionCreator<AddColumnAction> = (state: GridState, col: number) => {
-  var c: Cell[] = [];
-  for (let row = 0; row < state.rows; row++) {
-    c = [...c, { content: "", color: "WHITE" }]
-  }
-  const new_grid = [...state.grid.slice(0, col), c, ...state.grid.slice(col)];
-
-  return {
-    type: '@@grid/ADD_COLUMN',
-    payload: {
-      grid: new_grid,
-      columns: state.columns + 1
-    }
-  }
-};
-
-export const deleteRow: ActionCreator<DeleteRowAction> = (state: GridState, row: number) => {
-  if (state.rows === 1) {
     return {
-      type: '@@grid/DELETE_ROW',
-      payload: {
-        grid: state.grid,
-        rows: state.rows 
-      }
-    }
-  }
-  const new_grid = [...state.grid.slice(0, row), ...state.grid.slice(row + 1)];
+        type: "@@grid/ADD_ROW",
+        payload: {
+            grid: new_grid,
+            rows: state.rows + 1,
+            undoStack: [
+                ...state.undoStack,
+                { grid: state.grid, columns: state.columns, rows: state.rows },
+            ],
+        },
+    };
+};
 
-  return {
-    type: '@@grid/DELETE_ROW',
-    payload: {
-      grid: new_grid,
-      rows: state.rows - 1
+export const deleteRow: ActionCreator<DeleteRowAction> = (
+    state: GridState,
+    row: number
+) => {
+    if (state.rows === 1) {
+        return {
+            type: "@@grid/DELETE_ROW",
+            payload: {
+                grid: state.grid,
+                rows: state.rows,
+                undoStack: state.undoStack,
+            },
+        };
     }
-  }
+    const new_grid = [
+        ...state.grid.slice(0, row),
+        ...state.grid.slice(row + 1),
+    ];
+
+    return {
+        type: "@@grid/DELETE_ROW",
+        payload: {
+            grid: new_grid,
+            rows: state.rows - 1,
+            undoStack: [
+                ...state.undoStack,
+                { grid: state.grid, columns: state.columns, rows: state.rows },
+            ],
+        },
+    };
+};
+
+export const addColumn: ActionCreator<AddColumnAction> = (
+    state: GridState,
+    col: number
+) => {
+    var newGrid: Cell[][] = [];
+    for (let row = 0; row < state.rows; row++) {
+        const newRow = [
+            ...state.grid[row].slice(0, row),
+            { content: "", color: "WHITE" },
+            ...state.grid[row].slice(row),
+        ];
+        newGrid = [...newGrid, newRow];
+    }
+    return {
+        type: "@@grid/ADD_COLUMN",
+        payload: {
+            grid: newGrid,
+            columns: state.columns + 1,
+            undoStack: [
+                ...state.undoStack,
+                { grid: state.grid, columns: state.columns, rows: state.rows },
+            ],
+        },
+    };
+};
+
+export const deleteColumn: ActionCreator<DeleteColumnAction> = (
+    state: GridState,
+    col: number
+) => {
+    if (state.columns === 1) {
+        return {
+            type: "@@grid/DELETE_COLUMN",
+            payload: {
+                grid: state.grid,
+                columns: state.columns,
+                undoStack: state.undoStack,
+            },
+        };
+    }
+    var newGrid: Cell[][] = [];
+    for (let row = 0; row < state.rows; row++) {
+        const newRow = [
+            ...state.grid[row].slice(0, row),
+            ...state.grid[row].slice(row + 1),
+        ];
+        newGrid = [...newGrid, newRow];
+    }
+
+    return {
+        type: "@@grid/DELETE_COLUMN",
+        payload: {
+            grid: newGrid,
+            columns: state.columns - 1,
+            undoStack: [
+                ...state.undoStack,
+                { grid: state.grid, columns: state.columns, rows: state.rows },
+            ],
+        },
+    };
+};
+
+export const undo: ActionCreator<UndoAction> = (state: GridState) => {
+    if (state.undoStack.length < 1) {
+        return {
+            type: "@@grid/UNDO",
+            payload: {
+                state,
+            },
+        };
+    }
+    const oldState = state.undoStack[state.undoStack.length - 1];
+    const newUndo = state.undoStack.slice(0, -1);
+    return {
+        type: "@@grid/UNDO",
+        payload: {
+            state: {
+                ...oldState,
+                redoStack: [...state.redoStack, state],
+                undoStack: newUndo,
+            },
+        },
+    };
+};
+
+export const redo: ActionCreator<RedoAction> = (state: GridState) => {
+    if (state.redoStack.length < 1) {
+        return {
+            type: "@@grid/REDO",
+            payload: {
+                state,
+            },
+        };
+    }
+    const oldState = state.redoStack[state.redoStack.length - 1];
+    const newRedo = state.redoStack.slice(0, -1);
+
+    return {
+        type: "@@grid/REDO",
+        payload: {
+            state: {
+                ...oldState,
+                undoStack: [...state.undoStack, state],
+                redoStack: newRedo,
+            },
+        },
+    };
 };
