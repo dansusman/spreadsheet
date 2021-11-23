@@ -2,12 +2,15 @@ import React from "react";
 import { Cell } from "../../store/grid/types";
 import GridCell from "./gridCell";
 import "./Grid.css";
+import { useSelector } from "react-redux";
+import { ApplicationState } from "../../store";
 
-interface Props {
-    grid: Cell[][];
-}
+interface Props {}
 
-const Grid: React.FC<Props> = ({ grid }) => {
+const Grid: React.FC<Props> = () => {
+    const grid: Cell[][] = useSelector(
+        (state: ApplicationState) => state.grid.grid
+    );
     return (
         <div className="grid">
             {grid.map((row, rowKey) => (
