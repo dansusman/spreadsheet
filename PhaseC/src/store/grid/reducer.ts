@@ -1,8 +1,8 @@
 import { Reducer } from "redux";
 import { GridState, GridActions, Cell } from "./types";
 
-const NUM_ROWS: number = 1;
-const NUM_COLUMNS: number = 1;
+const NUM_ROWS: number = 26;
+const NUM_COLUMNS: number = 11;
 
 const makeCells = () => {
     var grid: Cell[][] = [];

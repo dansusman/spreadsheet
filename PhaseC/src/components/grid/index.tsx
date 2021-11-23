@@ -15,6 +15,7 @@ const Grid: React.FC<Props> = () => {
         <div className="grid">
             {grid.map((row, rowKey) => (
                 <div className="row" key={rowKey}>
+                    <div className="rowHeader">{rowKey + 1}</div>
                     {row.map((cell, cellKey) => (
                         <GridCell cell={cell} key={cellKey} />
                     ))}
