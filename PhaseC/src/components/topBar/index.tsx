@@ -4,6 +4,7 @@ import { ApplicationState } from "../../store";
 import Button from "@mui/material/Button";
 import UndoIcon from "@mui/icons-material/Undo";
 import RedoIcon from "@mui/icons-material/Redo";
+import FormatColorFillIcon from "@mui/icons-material/FormatColorFill";
 import {
     addColumn,
     addRow,
@@ -88,6 +89,18 @@ const TopBar = (props: Props) => {
                 onClick={() => dispatch(deleteColumn(spreadSheet, 0))}
             >
                 Delete Column
+            </Button>
+            <Button
+                sx={{
+                    ...buttonTheme,
+                }}
+                variant="contained"
+                onClick={() => {}}
+            >
+                <div className="label">
+                    <FormatColorFillIcon />
+                    <span>Fill Cell</span>
+                </div>
             </Button>
         </div>
     );
