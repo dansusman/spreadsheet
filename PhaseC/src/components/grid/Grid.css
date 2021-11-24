@@ -1,19 +1,23 @@
 .grid {
     display: flex;
     flex-direction: column;
-    padding: 0 20px;
+    overflow: scroll;
+    height: calc(100% - 80px);
+    border: 1px solid blue;
 }
 
 .row {
+    height: 30px;
     display: flex;
 }
 
 .rowHeader {
-    height: 30px;
-    width: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
     border: 1px solid #a1a1a1;
     background: #e7e7e7;
+    height: 30px;
+    width: 30px;
+    flex-shrink: 0;
 }
