@@ -2,7 +2,7 @@ import { Reducer } from "redux";
 import { GridState, GridActions, Cell } from "./types";
 
 const NUM_ROWS: number = 15;
-const NUM_COLUMNS: number = 10;
+const NUM_COLUMNS: number = 40;
 
 const makeCells = () => {
     var grid: Cell[][] = [];
