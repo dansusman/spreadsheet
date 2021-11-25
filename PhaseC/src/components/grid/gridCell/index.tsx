@@ -32,7 +32,6 @@ const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
                         cellLabel: cellName,
                     })
                 }
-                onBlur={() => setSelectedCell(null)}
             />
         </div>
     );
