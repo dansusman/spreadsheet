@@ -4,6 +4,7 @@ import GridCell from "./gridCell";
 import "./Grid.css";
 import { useSelector } from "react-redux";
 import { ApplicationState } from "../../store";
+import { SelectedCell } from "../../types";
 
 function getColHeaders(columns: number): string[] {
     var headers: string[] = [];
@@ -16,9 +17,11 @@ function getColHeaders(columns: number): string[] {
     return headers;
 }
 
-interface Props {}
+interface Props {
+    setSelectedCell: (s: SelectedCell | null) => void;
+}
 
-const Grid: React.FC<Props> = () => {
+const Grid: React.FC<Props> = ({ setSelectedCell }) => {
     const grid: Cell[][] = useSelector(
         (state: ApplicationState) => state.grid.grid
     );
@@ -41,7 +44,13 @@ const Grid: React.FC<Props> = () => {
                         {rowKey + 1}
                     </div>
                     {row.map((cell, cellKey) => (
-                        <GridCell cell={cell} key={cellKey} />
+                        <GridCell
+                            cell={cell}
+                            col={cellKey}
+                            row={rowKey}
+                            key={`${rowKey} + ${cellKey}`}
+                            setSelectedCell={setSelectedCell}
+                        />
                     ))}
                 </div>
             ))}
