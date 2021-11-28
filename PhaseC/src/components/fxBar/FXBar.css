@@ -1,40 +1,40 @@
 .fxBar {
-    display: flex;
-    height: 32px;
+  display: flex;
+  height: 32px;
 }
 
 .cellName {
-    color: black;
-    font-weight: bold;
-    font-size: 16px;
+  color: black;
+  font-weight: bold;
+  font-size: 16px;
 }
 
 .selectCell {
-    color: #929292;
-    display: flex;
-    width: 100px;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 10px;
-    border: 0.5px solid #a1a1a1;
+  color: #929292;
+  display: flex;
+  width: 100px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  border: 0.5px solid #a1a1a1;
+  border-radius: 2px;
 }
 
 .fx {
-    color: #929292;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 80px;
-    border: 0.5px solid #a1a1a1;
-    border-right-color: #c7c7c7;
-    font-weight: bold;
+  color: #929292;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  border: 0.5px solid #a1a1a1;
+  border-right-color: #c7c7c7;
+  border-radius: 2px;
+  font-weight: bold;
 }
 
 .function {
-    outline: none;
-    border: 1px solid #a1a1a1;
-    border-left: none;
-    height: 30px;
-    width: 100%;
-    padding-bottom: 0;
+  outline: none;
+  height: 30px;
+  width: 100%;
+  padding-bottom: 0;
 }
