@@ -4,7 +4,6 @@ import { ApplicationState } from "../../store";
 import Button from "@mui/material/Button";
 import UndoIcon from "@mui/icons-material/Undo";
 import RedoIcon from "@mui/icons-material/Redo";
-import FormatColorFillIcon from "@mui/icons-material/FormatColorFill";
 import {
     addColumn,
     addRow,
@@ -17,6 +16,7 @@ import "./TopBar.css";
 import { purple } from "@mui/material/colors";
 import { Theme } from "@mui/material";
 import { SxProps } from "@mui/system";
+import FillCellButton from "./fillCell";
 
 const buttonTheme: SxProps<Theme> = {
     mx: "10px",
@@ -90,18 +90,7 @@ const TopBar = (props: Props) => {
             >
                 Delete Column
             </Button>
-            <Button
-                sx={{
-                    ...buttonTheme,
-                }}
-                variant="contained"
-                onClick={() => {}}
-            >
-                <div className="label">
-                    <FormatColorFillIcon />
-                    <span>Fill Cell</span>
-                </div>
-            </Button>
+            <FillCellButton buttonTheme={buttonTheme} />
         </div>
     );
 };
