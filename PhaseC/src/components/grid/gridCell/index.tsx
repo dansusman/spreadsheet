@@ -6,6 +6,7 @@ import { ApplicationState } from "../../../store";
 import { replaceContent } from "../../../store/grid/actions";
 import { Cell } from "../../../store/grid/types";
 import { SelectedCell } from "../../../types";
+import { operationParse } from "../../util/operationParser";
 import "./GridCell.css";
 
 interface Props {
@@ -16,7 +17,7 @@ interface Props {
 }
 
 const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
-    const [cellContent, setCellContent] = useState(cell.content);
+    const [cellContent, setCellContent] = useState("");
     const [cellColor, setCellColor] = useState(cell.color);
     const dispatch = useDispatch();
     const ref = useRef<HTMLInputElement>(null);
@@ -29,11 +30,11 @@ const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
         if (cellContent !== cell.content) {
             dispatch(replaceContent(state, cellContent, row, col));
         }
+        setCellContent(operationParse(cell.content.trim()));
     };
 
     const handleKeys = (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
-            console.log("We are here");
             submitContent();
             if (ref.current) {
                 ref.current.blur();
@@ -42,7 +43,11 @@ const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
     };
 
     useEffect(() => {
-        setCellContent(cell.content);
+        if (cell.content) {
+            setCellContent(operationParse(cell.content.trim()));
+        } else {
+            setCellContent("");
+        }
     }, [cell.content]);
 
     useEffect(() => {
@@ -55,6 +60,7 @@ const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
                 style={{ background: cellColor }}
                 ref={ref}
                 value={cellContent}
+                onFocus={() => setCellContent(cell.content)}
                 onChange={(e) => setCellContent(e.target.value)}
                 onSelect={() =>
                     setSelectedCell({

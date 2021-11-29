@@ -35,7 +35,9 @@ const Grid: React.FC<Props> = ({ setSelectedCell }) => {
             <div className="headerRow">
                 <div className="header rowHeader" />
                 {colHeaders.map((header: string) => (
-                    <div className="header colHeader">{header}</div>
+                    <div className="header colHeader" key={header}>
+                        {header}
+                    </div>
                 ))}
             </div>
             {grid.map((row, rowKey) => (

@@ -15,5 +15,5 @@ input {
 input:focus {
     position: relative;
     border: 1px solid blue;
-    z-index: 20;
+    z-index: 9;
 }

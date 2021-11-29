@@ -183,7 +183,6 @@ export const replaceContent: ActionCreator<ReplaceContentAction> = (
     colNum: number
 ) => {
     const newGrid = JSON.parse(JSON.stringify(state.grid));
-    console.log(newGrid);
     const cell = newGrid[rowNum][colNum];
     newGrid[rowNum][colNum] = { ...cell, content };
 
@@ -206,7 +205,6 @@ export const fillCell: ActionCreator<FillCellAction> = (
     colNum: number
 ) => {
     const newGrid = JSON.parse(JSON.stringify(state.grid));
-    console.log(newGrid);
     const cell = newGrid[rowNum][colNum];
     newGrid[rowNum][colNum] = { ...cell, color: newColor };
 
