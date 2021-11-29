@@ -9,6 +9,7 @@ import {
     UndoAction,
     RedoAction,
     ReplaceContentAction,
+    FillCellAction,
 } from "./types";
 
 export const addRow: ActionCreator<AddRowAction> = (
@@ -188,6 +189,29 @@ export const replaceContent: ActionCreator<ReplaceContentAction> = (
 
     return {
         type: "@@grid/REPLACE_CONTENT",
+        payload: {
+            grid: newGrid,
+            undoStack: [
+                ...state.undoStack,
+                { grid: state.grid, columns: state.columns, rows: state.rows },
+            ],
+        },
+    };
+};
+
+export const fillCell: ActionCreator<FillCellAction> = (
+    state: GridState,
+    newColor: string,
+    rowNum: number,
+    colNum: number
+) => {
+    const newGrid = JSON.parse(JSON.stringify(state.grid));
+    console.log(newGrid);
+    const cell = newGrid[rowNum][colNum];
+    newGrid[rowNum][colNum] = { ...cell, color: newColor };
+
+    return {
+        type: "@@grid/FILL_CELL",
         payload: {
             grid: newGrid,
             undoStack: [

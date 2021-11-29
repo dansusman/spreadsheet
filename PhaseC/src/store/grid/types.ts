@@ -77,6 +77,14 @@ export interface ReplaceContentAction extends Action {
     };
 }
 
+export interface FillCellAction extends Action {
+    type: "@@grid/FILL_CELL";
+    payload: {
+        grid: Cell[][];
+        undoStack: GridHistory[];
+    };
+}
+
 export type GridActions =
     | AddRowAction
     | AddColumnAction
@@ -84,4 +92,5 @@ export type GridActions =
     | DeleteColumnAction
     | UndoAction
     | RedoAction
-    | ReplaceContentAction;
+    | ReplaceContentAction
+    | FillCellAction;

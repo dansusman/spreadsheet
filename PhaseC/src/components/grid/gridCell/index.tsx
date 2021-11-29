@@ -1,3 +1,4 @@
+import { CollectionsBookmarkTwoTone } from "@mui/icons-material";
 import { handleBreakpoints } from "@mui/system";
 import React, { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +17,7 @@ interface Props {
 
 const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
     const [cellContent, setCellContent] = useState(cell.content);
+    const [cellColor, setCellColor] = useState(cell.color);
     const dispatch = useDispatch();
     const ref = useRef<HTMLInputElement>(null);
     const state = useSelector((state: ApplicationState) => state.grid);
@@ -43,9 +45,14 @@ const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
         setCellContent(cell.content);
     }, [cell.content]);
 
+    useEffect(() => {
+        setCellColor(cell.color);
+    }, [cell.color]);
+
     return (
         <div className="cell">
             <input
+                style={{ background: cellColor }}
                 ref={ref}
                 value={cellContent}
                 onChange={(e) => setCellContent(e.target.value)}

@@ -9,7 +9,7 @@ function App() {
     const [selectedCell, setSelectedCell] = useState<SelectedCell | null>(null);
     return (
         <div className="app">
-            <TopBar />
+            <TopBar selectedCell={selectedCell} />
             <FXBar selectedCell={selectedCell} />
             <Grid setSelectedCell={setSelectedCell} />
         </div>
