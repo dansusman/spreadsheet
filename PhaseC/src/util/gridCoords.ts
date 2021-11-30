@@ -15,7 +15,8 @@ export function getExactPositionFromHeader(header: string): {
     row: number;
     col: number;
 } {
-    const untranslatedColumn = header.replace(/[^A-Za-z]/g, "");
+    const newHeader = header.toLowerCase();
+    const untranslatedColumn = newHeader.replace(/[^A-Za-z]/g, "");
     const row = +header.replace(/^\D+/g, "") - 1;
     const headerLetterToGeneralColumn = untranslatedColumn.charCodeAt(0) - 97;
     const col =

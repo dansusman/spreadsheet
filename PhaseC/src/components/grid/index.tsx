@@ -5,7 +5,7 @@ import "./Grid.css";
 import { useSelector } from "react-redux";
 import { ApplicationState } from "../../store";
 import { SelectedCell } from "../../types";
-import { getColHeaders } from "../util/gridCoords";
+import { getColHeaders } from "../../util/gridCoords";
 
 interface Props {
     setSelectedCell: (s: SelectedCell | null) => void;

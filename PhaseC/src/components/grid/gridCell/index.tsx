@@ -4,7 +4,7 @@ import { ApplicationState } from "../../../store";
 import { replaceContent } from "../../../store/grid/actions";
 import { Cell } from "../../../store/grid/types";
 import { SelectedCell } from "../../../types";
-import { operationParse } from "../../util/operationParser";
+import { FunctionParser } from "../../../util/operationParser";
 import "./GridCell.css";
 
 interface Props {
@@ -20,6 +20,7 @@ const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
     const dispatch = useDispatch();
     const ref = useRef<HTMLInputElement>(null);
     const state = useSelector((state: ApplicationState) => state.grid);
+    const grid = useSelector((state: ApplicationState) => state.grid.grid);
     const repeatCharacterCount = Math.ceil((col + 1) / 26);
     const character: string = String.fromCharCode(97 + (col % 26));
     const cellName = `${character.repeat(repeatCharacterCount)}${row + 1}`;
@@ -28,7 +29,9 @@ const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
         if (cellContent !== cell.content) {
             dispatch(replaceContent(state, cellContent, row, col));
         }
-        setCellContent(operationParse(cell.content.trim()));
+        setCellContent(
+            new FunctionParser(grid, cell.content.trim()).evaluate()
+        );
     };
 
     const handleKeys = (e: React.KeyboardEvent) => {
@@ -42,7 +45,9 @@ const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
 
     useEffect(() => {
         if (cell.content) {
-            setCellContent(operationParse(cell.content.trim()));
+            setCellContent(
+                new FunctionParser(grid, cell.content.trim()).evaluate()
+            );
         } else {
             setCellContent("");
         }
