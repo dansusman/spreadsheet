@@ -17,17 +17,29 @@ export class FunctionParser {
             const regex = /SUM\(([^)]+)\)/g;
             const match = Array.from(result.matchAll(regex));
             const functions = match.map((sums: any) => {
-                const summed: string[] = sums[1]
+                const boxCorners: any[] = sums[1]
                     .split("..")
                     .map((reference: string) => {
-                        const coords = getExactPositionFromHeader(reference);
-                        const eq =
-                            this.grid[coords.row][coords.col].content || "= 0";
-                        return `(${eq.replace("=", "")})`;
+                        return getExactPositionFromHeader(reference);
                     });
-                return summed
-                    .slice(1)
-                    .reduce((prev, curr) => `${curr} + ${prev}`, summed[0]);
+                if (boxCorners.length !== 2) {
+                    throw new Error("ree");
+                }
+
+                const minCol = Math.min(boxCorners[0].col, boxCorners[1].col);
+                const maxCol = Math.max(boxCorners[0].col, boxCorners[1].col);
+                const minRow = Math.min(boxCorners[0].row, boxCorners[1].row);
+                const maxRow = Math.max(boxCorners[0].row, boxCorners[1].row);
+
+                var eqs: string[] = [];
+
+                for (let rowNum = minRow; rowNum <= maxRow; rowNum++) {
+                    for (let colNum = minCol; colNum <= maxCol; colNum++) {
+                        const eq = this.grid[rowNum][colNum].content || "= 0";
+                        eqs = [`(${eq.replace("=", "")})`, ...eqs];
+                    }
+                }
+                return eqs.reduce((prev, curr) => `${curr} + ${prev}`, eqs[0]);
             });
             match.forEach((match, index) => {
                 result = result.replace(match[0], `(${functions[index]})`);
