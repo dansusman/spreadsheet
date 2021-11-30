@@ -1,6 +1,4 @@
-import { CollectionsBookmarkTwoTone } from "@mui/icons-material";
-import { handleBreakpoints } from "@mui/system";
-import React, { SyntheticEvent, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ApplicationState } from "../../../store";
 import { replaceContent } from "../../../store/grid/actions";

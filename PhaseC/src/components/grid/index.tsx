@@ -5,17 +5,7 @@ import "./Grid.css";
 import { useSelector } from "react-redux";
 import { ApplicationState } from "../../store";
 import { SelectedCell } from "../../types";
-
-function getColHeaders(columns: number): string[] {
-    var headers: string[] = [];
-    for (let col = 1; col <= columns; col++) {
-        const repeatCharacterCount = Math.ceil(col / 26);
-        const character: string = String.fromCharCode(97 + ((col - 1) % 26));
-        const colText = character.repeat(repeatCharacterCount);
-        headers = [...headers, colText];
-    }
-    return headers;
-}
+import { getColHeaders } from "../util/gridCoords";
 
 interface Props {
     setSelectedCell: (s: SelectedCell | null) => void;
