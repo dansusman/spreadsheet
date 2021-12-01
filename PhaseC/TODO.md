@@ -26,3 +26,9 @@
 - [x] AVG
 - [x] REF
 - [x] string concat
+
+# TESTING
+
+- cells containing values and various types of formulas
+- insertion and deletion of rows and columns
+- clearing the contents of a cell
