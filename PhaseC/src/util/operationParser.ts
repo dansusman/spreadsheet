@@ -36,7 +36,7 @@ export class FunctionParser {
                 });
             if (boxCorners.length !== 2) {
                 throw new Error(
-                    `Incorrectly formatted ${command}. Hint: Use format =${command}(<Cell>..<Cell>)`
+                    `Incorrectly formatted ${command}.\nHint: Use format =${command}(<Cell>..<Cell>)`
                 );
             }
 
@@ -55,7 +55,7 @@ export class FunctionParser {
                 )
             ) {
                 throw new Error(
-                    `Circular dependency detected. Please revise your ${command} formula`
+                    `Circular dependency detected.\nPlease revise your ${command} formula`
                 );
             }
 
@@ -143,13 +143,13 @@ export class FunctionParser {
     private translateErrorMessageToType(message: string): ParserError {
         const defaultCode = "Error";
         const errors: { [key: string]: string } = {
-            "Incorrectly formatted AVG. Hint: Use format =AVG(<Cell>..<Cell>)":
+            "Incorrectly formatted AVG.\nHint: Use format =AVG(<Cell>..<Cell>)":
                 "Format!",
-            "Incorrectly formatted SUM. Hint: Use format =SUM(<Cell>..<Cell>)":
+            "Incorrectly formatted SUM.\nHint: Use format =SUM(<Cell>..<Cell>)":
                 "Format!",
-            "Circular dependency detected. Please revise your SUM formula":
+            "Circular dependency detected.\nPlease revise your SUM formula":
                 "REF!",
-            "Circular dependency detected. Please revise your AVG formula":
+            "Circular dependency detected.\nPlease revise your AVG formula":
                 "REF!",
         };
         const parserError: ParserError = {

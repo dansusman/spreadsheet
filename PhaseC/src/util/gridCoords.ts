@@ -35,6 +35,6 @@ export function isWithinRange(
         maxCol >= coords.x &&
         minCol <= coords.x &&
         maxRow >= coords.y &&
-        minRow >= coords.y
+        minRow <= coords.y
     );
 }

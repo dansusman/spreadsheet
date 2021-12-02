@@ -1,0 +1,14 @@
+.error {
+    position: absolute;
+    z-index: 30;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 10px 20px;
+    align-items: center;
+    min-width: 200px;
+    min-height: 50px;
+    border: 2px solid red;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 12px;
+}
