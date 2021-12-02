@@ -1,4 +1,5 @@
 import { number } from "mathjs";
+import { CartesianPair } from "../types";
 
 export function getColHeaders(columns: number): string[] {
     var headers: string[] = [];
@@ -11,10 +12,8 @@ export function getColHeaders(columns: number): string[] {
     return headers;
 }
 
-export function getExactPositionFromHeader(header: string): {
-    row: number;
-    col: number;
-} {
+export function getExactPositionFromHeader(header: string): CartesianPair {
+    // TODO: handle bad headers like "A" or "1" or "A1A"
     const newHeader = header.toLowerCase();
     const untranslatedColumn = newHeader.replace(/[^A-Za-z]/g, "");
     const row = +header.replace(/^\D+/g, "") - 1;
@@ -22,5 +21,20 @@ export function getExactPositionFromHeader(header: string): {
     const col =
         headerLetterToGeneralColumn + (untranslatedColumn.length - 1) * 26;
 
-    return { row, col };
+    return { y: row, x: col };
+}
+
+export function isWithinRange(
+    maxCol: number,
+    minCol: number,
+    maxRow: number,
+    minRow: number,
+    coords: CartesianPair
+) {
+    return (
+        maxCol >= coords.x &&
+        minCol <= coords.x &&
+        maxRow >= coords.y &&
+        minRow >= coords.y
+    );
 }
