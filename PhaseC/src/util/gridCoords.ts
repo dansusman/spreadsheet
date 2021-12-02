@@ -1,4 +1,5 @@
 import { number } from "mathjs";
+import { Cell } from "../store/grid/types";
 import { CartesianPair } from "../types";
 
 export function getColHeaders(columns: number): string[] {
@@ -21,6 +22,10 @@ export function getExactPositionFromHeader(header: string): CartesianPair {
     const col =
         headerLetterToGeneralColumn + (untranslatedColumn.length - 1) * 26;
 
+    console.log({ row, col });
+    if (row === NaN || row < 0 || col === NaN || col < 0) {
+        throw new Error(`"${header}" is an invalid input.\nPlease try again`);
+    }
     return { y: row, x: col };
 }
 
@@ -37,4 +42,9 @@ export function isWithinRange(
         maxRow >= coords.y &&
         minRow <= coords.y
     );
+}
+
+export function isWithinGrid(grid: Cell[][], coord: CartesianPair): boolean {
+    if (grid.length === 0 || grid[0].length === 0) return false;
+    return isWithinRange(grid[0].length, 0, grid.length, 0, coord);
 }

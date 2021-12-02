@@ -1,20 +1,27 @@
 import { evaluate } from "mathjs";
 import { Cell } from "../store/grid/types";
 import { CartesianPair, ParserError, ParserResponse } from "../types";
-import { getExactPositionFromHeader, isWithinRange } from "./gridCoords";
+import {
+    getExactPositionFromHeader,
+    isWithinGrid,
+    isWithinRange,
+} from "./gridCoords";
 
 export class FunctionParser {
     private grid: Cell[][];
     private contents: string;
     private readonly currentCoords: CartesianPair;
+    private depth: number;
     constructor(
         grid: Cell[][],
         contents: string,
-        currentCoords: CartesianPair
+        currentCoords: CartesianPair,
+        depth: number = 0
     ) {
         this.grid = grid;
         this.contents = contents;
         this.currentCoords = currentCoords;
+        this.depth = depth;
     }
 
     applyRegExOnRange(
@@ -24,7 +31,6 @@ export class FunctionParser {
         result: string;
         length: number;
     } {
-        // TODO: need out of bounds error
         var result = this.contents;
         const matches = Array.from(result.matchAll(regex));
         var boxCount = 0;
@@ -46,6 +52,14 @@ export class FunctionParser {
             const maxRow = Math.max(boxCorners[0].y, boxCorners[1].y);
 
             if (
+                !isWithinGrid(this.grid, boxCorners[0]) ||
+                !isWithinGrid(this.grid, boxCorners[1])
+            ) {
+                throw new Error(
+                    `Reference error detected.\nCell outside bounds of grid`
+                );
+            }
+            if (
                 isWithinRange(
                     maxCol,
                     minCol,
@@ -66,7 +80,8 @@ export class FunctionParser {
                     const answer = new FunctionParser(
                         this.grid,
                         this.grid[rowNum][colNum].content,
-                        { x: colNum, y: rowNum }
+                        { x: colNum, y: rowNum },
+                        this.depth + 1
                     ).evaluate();
                     if (answer.error) {
                         throw new Error(answer.error.errorMessage);
@@ -108,17 +123,29 @@ export class FunctionParser {
     }
 
     refs(): void {
-        // TODO: handle all ref error
         var result = this.contents;
         if (this.contents.includes("REF")) {
             const regex = /REF\(([^)]+)\)/g;
             const matches = Array.from(result.matchAll(regex));
             const functions = matches.map((refs: any) => {
-                const { x, y } = getExactPositionFromHeader(refs[1]);
+                const refCoords = getExactPositionFromHeader(refs[1]);
+                console.log(refCoords);
+                if (!isWithinGrid(this.grid, refCoords)) {
+                    throw new Error(
+                        `Reference error detected.\nCell outside bounds of grid`
+                    );
+                }
+                const { x, y } = refCoords;
+                if (x === this.currentCoords.x && y === this.currentCoords.y) {
+                    throw new Error(
+                        `Circular dependency detected.\nPlease revise your REF formula`
+                    );
+                }
                 const answer = new FunctionParser(
                     this.grid,
                     this.grid[y][x].content,
-                    { x, y }
+                    { x, y },
+                    this.depth + 1
                 ).evaluate();
 
                 if (answer.error) {
@@ -141,16 +168,19 @@ export class FunctionParser {
     }
 
     private translateErrorMessageToType(message: string): ParserError {
-        const defaultCode = "Error";
+        const defaultCode = "ERROR!";
         const errors: { [key: string]: string } = {
             "Incorrectly formatted AVG.\nHint: Use format =AVG(<Cell>..<Cell>)":
-                "Format!",
+                "FORMAT!",
             "Incorrectly formatted SUM.\nHint: Use format =SUM(<Cell>..<Cell>)":
-                "Format!",
+                "FORMAT!",
             "Circular dependency detected.\nPlease revise your SUM formula":
+                "REF!",
+            "Circular dependency detected.\nPlease revise your REF formula":
                 "REF!",
             "Circular dependency detected.\nPlease revise your AVG formula":
                 "REF!",
+            "Reference error detected.\nCell outside bounds of grid": "REF!",
         };
         const parserError: ParserError = {
             errorType: errors[message] || defaultCode,
@@ -160,6 +190,9 @@ export class FunctionParser {
     }
 
     evaluate(): ParserResponse {
+        if (this.depth > 11) {
+            throw new Error("Maximum call stack size exceeded");
+        }
         if (this.contents.startsWith("=")) {
             try {
                 this.refs();
@@ -175,6 +208,11 @@ export class FunctionParser {
                 const error: ParserError = this.translateErrorMessageToType(
                     e.message
                 );
+                if (e.message === "Maximum call stack size exceeded") {
+                    error.errorMessage =
+                        "Circular dependency detected.\nPlease revise your formula";
+                    error.errorType = "REF!";
+                }
                 return { content: "", error };
             }
         }
