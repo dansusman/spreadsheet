@@ -32,3 +32,8 @@
 -   cells containing values and various types of formulas
 -   insertion and deletion of rows and columns
 -   clearing the contents of a cell
+
+# NEED TO FIX
+
+-   Subscription system for nodes that have dependencies
+-   equation to non equation no work
