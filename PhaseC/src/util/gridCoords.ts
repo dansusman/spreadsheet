@@ -1,4 +1,3 @@
-import { number } from "mathjs";
 import { Cell } from "../store/grid/types";
 import { CartesianPair } from "../types";
 
@@ -14,7 +13,6 @@ export function getColHeaders(columns: number): string[] {
 }
 
 export function getExactPositionFromHeader(header: string): CartesianPair {
-    // TODO: handle bad headers like "A" or "1" or "A1A"
     const newHeader = header.toLowerCase();
     const untranslatedColumn = newHeader.replace(/[^A-Za-z]/g, "");
     const row = +header.replace(/^\D+/g, "") - 1;
@@ -22,7 +20,6 @@ export function getExactPositionFromHeader(header: string): CartesianPair {
     const col =
         headerLetterToGeneralColumn + (untranslatedColumn.length - 1) * 26;
 
-    console.log({ row, col });
     if (row === NaN || row < 0 || col === NaN || col < 0) {
         throw new Error(`"${header}" is an invalid input.\nPlease try again`);
     }

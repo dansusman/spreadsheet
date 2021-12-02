@@ -1,6 +1,15 @@
-import { evaluate } from "mathjs";
+import { e, evaluate } from "mathjs";
 import { Cell } from "../store/grid/types";
-import { CartesianPair, ParserError, ParserResponse } from "../types";
+import {
+    CartesianPair,
+    CircularError,
+    FailedParseError,
+    FormatError,
+    OverflowError,
+    ParserError,
+    ParserResponse,
+    ReferenceError,
+} from "../types";
 import {
     getExactPositionFromHeader,
     isWithinGrid,
@@ -41,9 +50,7 @@ export class FunctionParser {
                     return getExactPositionFromHeader(reference);
                 });
             if (boxCorners.length !== 2) {
-                throw new Error(
-                    `Incorrectly formatted ${command}.\nHint: Use format =${command}(<Cell>..<Cell>)`
-                );
+                throw new FormatError(command);
             }
 
             const minCol = Math.min(boxCorners[0].x, boxCorners[1].x);
@@ -55,9 +62,7 @@ export class FunctionParser {
                 !isWithinGrid(this.grid, boxCorners[0]) ||
                 !isWithinGrid(this.grid, boxCorners[1])
             ) {
-                throw new Error(
-                    `Reference error detected.\nCell outside bounds of grid`
-                );
+                throw new ReferenceError();
             }
             if (
                 isWithinRange(
@@ -68,9 +73,7 @@ export class FunctionParser {
                     this.currentCoords
                 )
             ) {
-                throw new Error(
-                    `Circular dependency detected.\nPlease revise your ${command} formula`
-                );
+                throw new CircularError(command);
             }
 
             var eqs: string[] = [];
@@ -84,7 +87,10 @@ export class FunctionParser {
                         this.depth + 1
                     ).evaluate();
                     if (answer.error) {
-                        throw new Error(answer.error.errorMessage);
+                        throw new FailedParseError(
+                            answer.error.errorMessage,
+                            answer.error.errorType
+                        );
                     }
                     const eq = answer.content || "= 0";
                     eqs = [`(${eq.replace("=", "")})`, ...eqs];
@@ -105,9 +111,7 @@ export class FunctionParser {
         if (this.contents.includes("SUM")) {
             const regex = /SUM\(([^)]+)\)/g;
             const { result } = this.applyRegExOnRange(regex, "SUM");
-            console.log("Content from SUM before:", this.contents);
             this.contents = result;
-            console.log("Content from SUM after:", this.contents);
         }
     }
 
@@ -116,7 +120,7 @@ export class FunctionParser {
             const regex = /AVG\(([^)]+)\)/g;
             const { result, length } = this.applyRegExOnRange(regex, "AVG");
             if (length === 0) {
-                throw new Error("Incorrectly formatted AVG.");
+                throw new FormatError("AVG");
             }
             this.contents = `(${result} / ${length})`;
         }
@@ -129,7 +133,6 @@ export class FunctionParser {
             const matches = Array.from(result.matchAll(regex));
             const functions = matches.map((refs: any) => {
                 const refCoords = getExactPositionFromHeader(refs[1]);
-                console.log(refCoords);
                 if (!isWithinGrid(this.grid, refCoords)) {
                     throw new Error(
                         `Reference error detected.\nCell outside bounds of grid`
@@ -149,7 +152,10 @@ export class FunctionParser {
                 ).evaluate();
 
                 if (answer.error) {
-                    throw new Error(answer.error.errorMessage);
+                    throw new FailedParseError(
+                        answer.error.errorMessage,
+                        answer.error.errorType
+                    );
                 }
                 return answer.content || "= 0";
             });
@@ -161,37 +167,13 @@ export class FunctionParser {
                 );
             });
 
-            console.log("Content from REF before:", this.contents);
             this.contents = result.substring(1);
-            console.log("Content from REF after:", this.contents);
         }
-    }
-
-    private translateErrorMessageToType(message: string): ParserError {
-        const defaultCode = "ERROR!";
-        const errors: { [key: string]: string } = {
-            "Incorrectly formatted AVG.\nHint: Use format =AVG(<Cell>..<Cell>)":
-                "FORMAT!",
-            "Incorrectly formatted SUM.\nHint: Use format =SUM(<Cell>..<Cell>)":
-                "FORMAT!",
-            "Circular dependency detected.\nPlease revise your SUM formula":
-                "REF!",
-            "Circular dependency detected.\nPlease revise your REF formula":
-                "REF!",
-            "Circular dependency detected.\nPlease revise your AVG formula":
-                "REF!",
-            "Reference error detected.\nCell outside bounds of grid": "REF!",
-        };
-        const parserError: ParserError = {
-            errorType: errors[message] || defaultCode,
-            errorMessage: message,
-        };
-        return parserError;
     }
 
     evaluate(): ParserResponse {
         if (this.depth > 11) {
-            throw new Error("Maximum call stack size exceeded");
+            throw new OverflowError();
         }
         if (this.contents.startsWith("=")) {
             try {
@@ -201,18 +183,12 @@ export class FunctionParser {
                 if (this.contents.startsWith("=")) {
                     this.contents = this.contents.substring(1);
                 }
-                console.log(this.contents);
-                // TODO: general math js errors
                 return { content: String(evaluate(this.contents)) };
             } catch (e: any) {
-                const error: ParserError = this.translateErrorMessageToType(
-                    e.message
-                );
-                if (e.message === "Maximum call stack size exceeded") {
-                    error.errorMessage =
-                        "Circular dependency detected.\nPlease revise your formula";
-                    error.errorType = "REF!";
-                }
+                const error: ParserError = {
+                    errorMessage: e.message,
+                    errorType: e.type || "ERROR!",
+                };
                 return { content: "", error };
             }
         }

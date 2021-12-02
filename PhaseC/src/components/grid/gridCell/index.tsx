@@ -29,8 +29,8 @@ const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
     const cellName = `${character.repeat(repeatCharacterCount)}${row + 1}`;
 
     const handleParse = () => {
-        if (cellContent.startsWith("=")) {
-            const parsed = new FunctionParser(grid, cellContent.trim(), {
+        if (cell.content.startsWith("=")) {
+            const parsed = new FunctionParser(grid, cell.content.trim(), {
                 y: row,
                 x: col,
             }).evaluate();
@@ -63,6 +63,7 @@ const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
 
     useEffect(() => {
         if (cell.content) {
+            setError("");
             handleParse();
         } else {
             setCellContent("");
