@@ -3,7 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { ApplicationState } from "../../../store";
 import { replaceContent } from "../../../store/grid/actions";
 import { Cell } from "../../../store/grid/types";
-import { SelectedCell } from "../../../types";
+import {
+    CartesianPair,
+    SelectedCell,
+    SubscriptionBundle,
+} from "../../../types";
+import { CellObserverStore } from "../../../util/observer";
 import { FunctionParser } from "../../../util/operationParser";
 import { StringParser } from "../../../util/stringParser";
 import ErrorHelper from "./errorHelper";
@@ -16,6 +21,13 @@ interface Props {
     row: number;
 }
 
+const useSub = (coords: CartesianPair) => {
+    const [shouldUpdate, setShouldUpdate] = useState(0);
+    var { observer, observable }: SubscriptionBundle =
+        CellObserverStore.getInstance().addMe(coords, setShouldUpdate);
+    return { shouldUpdate, observable, observer };
+};
+
 const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
     const [cellContent, setCellContent] = useState("");
     const [cellColor, setCellColor] = useState(cell.color);
@@ -23,10 +35,19 @@ const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
     const dispatch = useDispatch();
     const ref = useRef<HTMLInputElement>(null);
     const state = useSelector((state: ApplicationState) => state.grid);
-    const grid = useSelector((state: ApplicationState) => state.grid.grid);
+    const grid = state.grid;
     const repeatCharacterCount = Math.ceil((col + 1) / 26);
     const character: string = String.fromCharCode(97 + (col % 26));
     const cellName = `${character.repeat(repeatCharacterCount)}${row + 1}`;
+
+    const { shouldUpdate, observable, observer } = useSub({ x: col, y: row });
+
+    const updateDependencies = (deps: CartesianPair[]) => {
+        CellObserverStore.getInstance().resetListenersInObservable(
+            deps,
+            observer
+        );
+    };
 
     const handleParse = () => {
         if (cell.content.startsWith("=")) {
@@ -34,6 +55,7 @@ const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
                 y: row,
                 x: col,
             }).evaluate();
+            updateDependencies(parsed.dependencies);
             if (parsed.error) {
                 setCellContent(parsed.error.errorType);
                 setError(parsed.error.errorMessage);
@@ -42,14 +64,18 @@ const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
             }
         } else if (cell.content.includes('"')) {
             setCellContent(new StringParser(cell.content.trim()).evaluate());
+        } else {
+            setCellContent(cell.content);
         }
+        observable.notify();
     };
     const submitContent = () => {
         if (cellContent !== cell.content) {
             dispatch(replaceContent(state, cellContent, row, col));
+        } else {
+            setError("");
+            handleParse();
         }
-        setError("");
-        handleParse();
     };
 
     const handleKeys = (e: React.KeyboardEvent) => {
@@ -62,13 +88,9 @@ const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
     };
 
     useEffect(() => {
-        if (cell.content) {
-            setError("");
-            handleParse();
-        } else {
-            setCellContent("");
-        }
-    }, [cell.content]);
+        setError("");
+        handleParse();
+    }, [cell.content, shouldUpdate]);
 
     useEffect(() => {
         setCellColor(cell.color);

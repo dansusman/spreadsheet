@@ -1,4 +1,4 @@
-import { e, evaluate } from "mathjs";
+import { evaluate } from "mathjs";
 import { Cell } from "../store/grid/types";
 import {
     CartesianPair,
@@ -15,12 +15,14 @@ import {
     isWithinGrid,
     isWithinRange,
 } from "./gridCoords";
+import { StringParser } from "./stringParser";
 
 export class FunctionParser {
     private grid: Cell[][];
     private contents: string;
     private readonly currentCoords: CartesianPair;
     private depth: number;
+    private dependencies: CartesianPair[] = [];
     constructor(
         grid: Cell[][],
         contents: string,
@@ -92,6 +94,10 @@ export class FunctionParser {
                             answer.error.errorType
                         );
                     }
+                    this.dependencies = [
+                        ...this.dependencies,
+                        { x: colNum, y: rowNum },
+                    ];
                     const eq = answer.content || "= 0";
                     eqs = [`(${eq.replace("=", "")})`, ...eqs];
                 }
@@ -126,7 +132,8 @@ export class FunctionParser {
         }
     }
 
-    refs(): void {
+    refs(): boolean {
+        var isFunction = true;
         var result = this.contents;
         if (this.contents.includes("REF")) {
             const regex = /REF\(([^)]+)\)/g;
@@ -157,18 +164,42 @@ export class FunctionParser {
                         answer.error.errorType
                     );
                 }
+                this.dependencies = [...this.dependencies, { x, y }];
+                if (
+                    !answer.error &&
+                    answer.content &&
+                    !answer.content.startsWith("=")
+                ) {
+                    if (answer.content.includes(`"`)) {
+                        return new StringParser(answer.content).evaluate();
+                    } else {
+                        return answer.content;
+                    }
+                }
                 return answer.content || "= 0";
             });
 
+            console.log(result);
+
             matches.forEach((match, index) => {
-                result = result.replace(
-                    match[0],
-                    `(${functions[index].replace("=", "")})`
-                );
+                if (functions[index].startsWith("=")) {
+                    result = result.replace(
+                        match[0],
+                        functions[index].replace("=", "")
+                    );
+                } else {
+                    isFunction = false;
+                    result = result.replace(match[0], functions[index]);
+                }
             });
 
+            console.log(result);
+
             this.contents = result.substring(1);
+
+            return isFunction;
         }
+        return isFunction;
     }
 
     evaluate(): ParserResponse {
@@ -177,21 +208,28 @@ export class FunctionParser {
         }
         if (this.contents.startsWith("=")) {
             try {
-                this.refs();
+                const isFunction = this.refs();
                 this.sum();
                 this.avg();
+                console.log(this.contents);
                 if (this.contents.startsWith("=")) {
                     this.contents = this.contents.substring(1);
                 }
-                return { content: String(evaluate(this.contents)) };
+                if (isFunction) {
+                    return {
+                        content: String(evaluate(this.contents)),
+                        dependencies: this.dependencies,
+                    };
+                }
             } catch (e: any) {
                 const error: ParserError = {
                     errorMessage: e.message,
                     errorType: e.type || "ERROR!",
                 };
-                return { content: "", error };
+                // TODO: may cause issues with depth
+                return { content: "", error, dependencies: this.dependencies };
             }
         }
-        return { content: this.contents };
+        return { content: this.contents, dependencies: this.dependencies };
     }
 }
