@@ -30,7 +30,7 @@ export const addRow: ActionCreator<AddRowAction> = (
             undoStack: [
                 ...state.undoStack,
                 { grid: state.grid, columns: state.columns, rows: state.rows },
-            ].slice(-4),
+            ].slice(-2),
         },
     };
 };
@@ -88,7 +88,7 @@ export const addColumn: ActionCreator<AddColumnAction> = (
             undoStack: [
                 ...state.undoStack,
                 { grid: state.grid, columns: state.columns, rows: state.rows },
-            ].slice(-4),
+            ].slice(-2),
         },
     };
 };
@@ -124,7 +124,7 @@ export const deleteColumn: ActionCreator<DeleteColumnAction> = (
             undoStack: [
                 ...state.undoStack,
                 { grid: state.grid, columns: state.columns, rows: state.rows },
-            ].slice(-4),
+            ].slice(-2),
         },
     };
 };
@@ -193,7 +193,7 @@ export const replaceContent: ActionCreator<ReplaceContentAction> = (
             undoStack: [
                 ...state.undoStack,
                 { grid: state.grid, columns: state.columns, rows: state.rows },
-            ].slice(-4),
+            ].slice(-2),
         },
     };
 };

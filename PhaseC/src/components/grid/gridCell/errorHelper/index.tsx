@@ -1,3 +1,5 @@
+import { Alert, AlertTitle } from "@mui/material";
+import { fontFamily } from "@mui/system";
 import React from "react";
 import "./ErrorHelper.css";
 
@@ -8,7 +10,20 @@ interface Props {
 
 const ErrorHelper: React.FC<Props> = ({ error, cellRef }) => {
     if (error && cellRef.current === document.activeElement) {
-        return <div className="error">{error}</div>;
+        return (
+            <Alert
+                onClose={() => {}}
+                variant="filled"
+                severity="error"
+                className="error"
+            >
+                <AlertTitle style={{ fontFamily: "inherit" }}>Error</AlertTitle>
+                {error.split("\n").map((val) => (
+                    <div>{val}</div>
+                ))}
+            </Alert>
+        );
+        // return <div className="error">{error}</div>;
     }
     return <></>;
 };

@@ -142,14 +142,13 @@ export class FunctionParser {
                 const refCoords = getExactPositionFromHeader(refs[1]);
                 if (!isWithinGrid(this.grid, refCoords)) {
                     throw new Error(
-                        `Reference error detected.\nCell outside bounds of grid`
+                        `Reference error detected.
+                        Cell outside bounds of grid!`
                     );
                 }
                 const { x, y } = refCoords;
                 if (x === this.currentCoords.x && y === this.currentCoords.y) {
-                    throw new Error(
-                        `Circular dependency detected.\nPlease revise your REF formula`
-                    );
+                    throw new CircularError("REF");
                 }
                 const answer = new FunctionParser(
                     this.grid,

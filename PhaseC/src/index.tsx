@@ -5,13 +5,13 @@ import App from "./App";
 import { reducers } from "./store";
 
 const store = configureStore({
-  reducer: reducers,
+    reducer: reducers,
 });
 
 const rootElement = document.getElementById("root");
 render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  rootElement
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    rootElement
 );

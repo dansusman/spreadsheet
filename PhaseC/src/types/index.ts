@@ -38,7 +38,7 @@ export class FormatError extends Error {
     type: string = "FORMAT!";
     constructor(command: string) {
         super("");
-        this.message = `Incorrectly formatted ${command}.\nHint: Use format =${command}(<Cell>..<Cell>)`;
+        this.message = `Incorrectly formatted ${command}.\nHint: Use format =${command}(<Cell>..<Cell>).`;
     }
 }
 
@@ -46,7 +46,7 @@ export class CircularError extends Error {
     type: string = "REF!";
     constructor(command: string) {
         super("");
-        this.message = `Circular dependency detected.\nPlease revise your ${command} formula`;
+        this.message = `Circular dependency detected.\nPlease revise your ${command} formula!`;
     }
 }
 
@@ -54,13 +54,13 @@ export class OverflowError extends Error {
     type: string = "OVERFLOW!";
     constructor() {
         super("");
-        this.message = `Circular dependency detected.\nPlease revise your formula`;
+        this.message = `Circular dependency detected.\nPlease revise your formula!`;
     }
 }
 export class ReferenceError extends Error {
     type: string = "REF!";
     constructor() {
         super("");
-        this.message = "Reference error detected.\nCell does not exist";
+        this.message = "Reference error detected.\nCell does not exist!";
     }
 }
