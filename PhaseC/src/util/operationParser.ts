@@ -179,8 +179,6 @@ export class FunctionParser {
                 return answer.content || "= 0";
             });
 
-            console.log(result);
-
             matches.forEach((match, index) => {
                 if (functions[index].startsWith("=")) {
                     result = result.replace(
@@ -192,8 +190,6 @@ export class FunctionParser {
                     result = result.replace(match[0], functions[index]);
                 }
             });
-
-            console.log(result);
 
             this.contents = result.substring(1);
 
@@ -211,7 +207,6 @@ export class FunctionParser {
                 const isFunction = this.refs();
                 this.sum();
                 this.avg();
-                console.log(this.contents);
                 if (this.contents.startsWith("=")) {
                     this.contents = this.contents.substring(1);
                 }

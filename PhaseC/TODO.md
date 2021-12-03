@@ -17,7 +17,7 @@
 
 -   [x] Undo/Redo
 -   [x] Error detection
--   [ ] Recompute when equation's dependencies change
+-   [x] Recompute when equation's dependencies change
 -   [x] Parsing for equations (mathJS, custom str concat)
     -   check for "=" $\implies$ use mathJS
     -   check for '"' or "'" $\implies$ use custom str concat
@@ -32,8 +32,3 @@
 -   cells containing values and various types of formulas
 -   insertion and deletion of rows and columns
 -   clearing the contents of a cell
-
-# NEED TO FIX
-
--   Subscription system for nodes that have dependencies
--   equation to non equation no work
