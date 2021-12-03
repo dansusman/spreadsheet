@@ -1,3 +1,5 @@
+import { CellObservable, CellObserver } from "../util/observer";
+
 export interface SelectedCell {
     column: number;
     row: number;
@@ -12,11 +14,17 @@ export interface ParserError {
 export interface ParserResponse {
     error?: ParserError;
     content: string;
+    dependencies: CartesianPair[];
 }
 
 export interface CartesianPair {
     x: number;
     y: number;
+}
+
+export interface SubscriptionBundle {
+    observer: CellObserver;
+    observable: CellObservable;
 }
 
 export class FailedParseError extends Error {

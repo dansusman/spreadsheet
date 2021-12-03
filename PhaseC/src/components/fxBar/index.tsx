@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import "./FXBar.css";
 import { SelectedCell } from "../../types";
 import { useSelector } from "react-redux";
@@ -21,7 +20,7 @@ const FXBar: React.FC<Props> = ({ selectedCell }) => {
         } else {
             setFXValue("");
         }
-    }, [selectedCell]);
+    }, [selectedCell, grid]);
     return (
         <div className="fxBar">
             <div className="selectCell">

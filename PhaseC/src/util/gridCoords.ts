@@ -12,6 +12,10 @@ export function getColHeaders(columns: number): string[] {
     return headers;
 }
 
+export function cartesianToString(coords: CartesianPair) {
+    return `(x:${coords.x}, y:${coords.y})`;
+}
+
 export function getExactPositionFromHeader(header: string): CartesianPair {
     const newHeader = header.toLowerCase();
     const untranslatedColumn = newHeader.replace(/[^A-Za-z]/g, "");
@@ -20,7 +24,7 @@ export function getExactPositionFromHeader(header: string): CartesianPair {
     const col =
         headerLetterToGeneralColumn + (untranslatedColumn.length - 1) * 26;
 
-    if (row === NaN || row < 0 || col === NaN || col < 0) {
+    if (isNaN(row) || row < 0 || isNaN(col) || col < 0) {
         throw new Error(`"${header}" is an invalid input.\nPlease try again`);
     }
     return { y: row, x: col };
