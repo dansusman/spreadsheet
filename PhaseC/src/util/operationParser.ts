@@ -217,7 +217,9 @@ export class FunctionParser {
                 }
             } catch (e: any) {
                 const error: ParserError = {
-                    errorMessage: e.message,
+                    errorMessage: e.type
+                        ? e.message
+                        : `${e.message}\nPlease revise your cell input!`,
                     errorType: e.type || "ERROR!",
                 };
                 // TODO: may cause issues with depth
