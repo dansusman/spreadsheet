@@ -27,8 +27,9 @@
 -   [x] REF
 -   [x] string concat
 
--   Clear Contents of single cell
--   Clear whole spreadsheet
+-   [x] Clear Contents of single cell
+-   [ ] Clear whole spreadsheet
+-   [ ] Update Favicon
 
 # TESTING
 
