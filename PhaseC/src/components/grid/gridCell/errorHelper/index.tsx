@@ -1,5 +1,4 @@
 import { Alert, AlertTitle } from "@mui/material";
-import { fontFamily } from "@mui/system";
 import React from "react";
 import "./ErrorHelper.css";
 
@@ -18,8 +17,8 @@ const ErrorHelper: React.FC<Props> = ({ error, cellRef }) => {
                 className="error"
             >
                 <AlertTitle style={{ fontFamily: "inherit" }}>Error</AlertTitle>
-                {error.split("\n").map((val) => (
-                    <div>{val}</div>
+                {error.split("\n").map((val, idx) => (
+                    <div key={idx}>{val}</div>
                 ))}
             </Alert>
         );
