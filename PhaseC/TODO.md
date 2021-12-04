@@ -31,6 +31,10 @@
 -   [ ] Clear whole spreadsheet
 -   [ ] Update Favicon
 
+# BUGS:
+
+1. Add Column seems to add to the end, or something...
+
 # TESTING
 
 -   cells containing values and various types of formulas
