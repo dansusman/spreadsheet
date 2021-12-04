@@ -74,9 +74,9 @@ export const addColumn: ActionCreator<AddColumnAction> = (
     var newGrid: Cell[][] = [];
     for (let row = 0; row < state.rows; row++) {
         const newRow = [
-            ...state.grid[row].slice(0, row),
+            ...state.grid[row].slice(0, col),
             { content: "", color: "WHITE" },
-            ...state.grid[row].slice(row),
+            ...state.grid[row].slice(col),
         ];
         newGrid = [...newGrid, newRow];
     }
