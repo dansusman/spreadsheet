@@ -6,8 +6,8 @@
 .dropDown {
     position: absolute;
     display: flex;
-    left: -10px;
-    top: 50px;
+    left: -25px;
+    top: 53px;
     justify-content: space-evenly;
     align-items: center;
     background: #e7e7e7;

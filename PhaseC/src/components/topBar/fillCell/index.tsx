@@ -67,11 +67,12 @@ interface Props {
 const FillCellButton: React.FC<Props> = ({ buttonTheme, selectedCell }) => {
     const [isDropdown, setIsDropDown] = useState(false);
     return (
-        <div className="fillCell">
+        <>
             <Button
                 sx={{
                     ...buttonTheme,
                 }}
+                className="fillCell"
                 variant="contained"
                 onClick={() => setIsDropDown((cur) => !cur)}
             >
@@ -81,20 +82,20 @@ const FillCellButton: React.FC<Props> = ({ buttonTheme, selectedCell }) => {
                     {/* <FormatColorFillRoundedIcon htmlColor={COLORS.purple} /> */}
                     <span>Fill Cell</span>
                 </div>
+                {isDropdown && (
+                    <div className="dropDown">
+                        {Object.values(COLORS).map((color) => (
+                            <FillCellOption
+                                key={color}
+                                color={color}
+                                selectedCell={selectedCell}
+                                setDropDownState={setIsDropDown}
+                            />
+                        ))}
+                    </div>
+                )}
             </Button>
-            {isDropdown && (
-                <div className="dropDown">
-                    {Object.values(COLORS).map((color) => (
-                        <FillCellOption
-                            key={color}
-                            color={color}
-                            selectedCell={selectedCell}
-                            setDropDownState={setIsDropDown}
-                        />
-                    ))}
-                </div>
-            )}
-        </div>
+        </>
     );
 };
 
