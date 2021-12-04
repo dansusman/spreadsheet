@@ -59,8 +59,12 @@ export class OverflowError extends Error {
 }
 export class ReferenceError extends Error {
     type: string = "REF!";
-    constructor() {
+    constructor(isOutside: boolean = false) {
         super("");
-        this.message = "Reference error detected.\nCell does not exist!";
+        var append = "Cell does not exist!";
+        if (isOutside) {
+            append = "Cell outside bounds of grid!";
+        }
+        this.message = `Reference error detected.\n${append}`;
     }
 }
