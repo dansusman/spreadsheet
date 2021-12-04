@@ -172,18 +172,12 @@ export class FunctionParser {
                     );
                 }
                 this.dependencies = [...this.dependencies, { x, y }];
-                if (
-                    !answer.error &&
-                    answer.content &&
-                    !answer.content.startsWith("=")
-                ) {
-                    if (answer.content.includes(`"`)) {
-                        return new StringParser(answer.content).evaluate();
-                    } else {
-                        return answer.content;
-                    }
+                console.log(answer);
+                if (answer.content.includes(`"`)) {
+                    return new StringParser(answer.content).evaluate();
+                } else {
+                    return answer.content ? `=${answer.content}` : "= 0";
                 }
-                return answer.content || "= 0";
             });
 
             matches.forEach((match, index) => {
