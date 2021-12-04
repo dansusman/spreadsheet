@@ -10,6 +10,7 @@ import {
     deleteColumn,
     deleteRow,
     redo,
+    replaceContent,
     undo,
 } from "../../store/grid/actions";
 import "./TopBar.css";
@@ -60,6 +61,27 @@ const TopBar: React.FC<Props> = ({ selectedCell }) => {
                     <RedoRoundedIcon />
                     <span>Redo</span>
                 </div>
+            </Button>
+            <Button
+                sx={{
+                    ...buttonTheme,
+                }}
+                variant="contained"
+                disabled={selectedCell === null}
+                onClick={() => {
+                    if (selectedCell) {
+                        dispatch(
+                            replaceContent(
+                                spreadSheet,
+                                "",
+                                selectedCell.row,
+                                selectedCell.column
+                            )
+                        );
+                    }
+                }}
+            >
+                Clear Cell
             </Button>
             <Button
                 sx={{ ...buttonTheme }}
