@@ -15,7 +15,7 @@ import { StringParser } from "../../../util/stringParser";
 import ErrorHelper from "./errorHelper";
 import "./GridCell.css";
 
-interface Props {
+export interface Props {
     cell: Cell;
     setSelectedCell: (s: SelectedCell | null) => void;
     col: number;
@@ -29,7 +29,7 @@ const useSub = (coords: CartesianPair) => {
     return { shouldUpdate, observable, observer };
 };
 
-const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
+export const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
     const [cellContent, setCellContent] = useState("");
     const [cellColor, setCellColor] = useState(cell.color);
     const [error, setError] = useState("");

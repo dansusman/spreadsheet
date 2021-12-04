@@ -4,7 +4,7 @@ import { GridState, GridActions, Cell } from "./types";
 const NUM_ROWS: number = 15;
 const NUM_COLUMNS: number = 8;
 
-const makeCells = () => {
+export const makeCells = () => {
     var grid: Cell[][] = [];
     for (let row = 0; row < NUM_ROWS; row++) {
         var r: Cell[] = [];
@@ -96,4 +96,4 @@ const reducer: Reducer<GridState> = (
     }
 };
 
-export default reducer;
+export default { reducer, makeCells };
