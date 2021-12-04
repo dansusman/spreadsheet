@@ -210,7 +210,6 @@ export class FunctionParser {
                     this.contents = this.contents.substring(1);
                 }
                 if (isFunction) {
-                    console.log(this.contents);
                     return {
                         content: String(evaluate(this.contents)),
                         dependencies: this.dependencies,

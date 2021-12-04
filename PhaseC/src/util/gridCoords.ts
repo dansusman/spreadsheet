@@ -25,7 +25,7 @@ export function getExactPositionFromHeader(header: string): CartesianPair {
         headerLetterToGeneralColumn + (untranslatedColumn.length - 1) * 26;
 
     if (isNaN(row) || row < 0 || isNaN(col) || col < 0) {
-        throw new Error(`"${header}" is an invalid input.\nPlease try again`);
+        throw new Error(`"${header}" is an invalid input.\nPlease try again!`);
     }
     return { y: row, x: col };
 }
