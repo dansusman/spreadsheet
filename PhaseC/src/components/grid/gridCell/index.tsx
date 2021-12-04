@@ -1,3 +1,4 @@
+import { red } from "@mui/material/colors";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ApplicationState } from "../../../store";
@@ -39,6 +40,7 @@ const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
     const repeatCharacterCount = Math.ceil((col + 1) / 26);
     const character: string = String.fromCharCode(97 + (col % 26));
     const cellName = `${character.repeat(repeatCharacterCount)}${row + 1}`;
+    const errorTheme = error ? { background: red[50] } : {};
 
     const { shouldUpdate, observable, observer } = useSub({ x: col, y: row });
 
@@ -99,7 +101,7 @@ const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
     return (
         <div className="cell">
             <input
-                style={{ background: cellColor }}
+                style={{ background: cellColor, ...errorTheme }}
                 ref={ref}
                 value={cellContent}
                 onFocus={() => setCellContent(cell.content)}

@@ -172,7 +172,6 @@ export class FunctionParser {
                     );
                 }
                 this.dependencies = [...this.dependencies, { x, y }];
-                console.log(answer);
                 if (answer.content.includes(`"`)) {
                     return new StringParser(answer.content).evaluate();
                 } else {
