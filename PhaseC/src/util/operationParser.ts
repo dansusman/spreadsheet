@@ -152,10 +152,7 @@ export class FunctionParser {
             const functions = matches.map((refs: any) => {
                 const refCoords = getExactPositionFromHeader(refs[1]);
                 if (!isWithinGrid(this.grid, refCoords)) {
-                    throw new Error(
-                        `Reference error detected.
-                        Cell outside bounds of grid!`
-                    );
+                    throw new ReferenceError(true);
                 }
                 const { x, y } = refCoords;
                 if (x === this.currentCoords.x && y === this.currentCoords.y) {
