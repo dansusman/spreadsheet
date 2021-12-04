@@ -43,7 +43,7 @@ export class FormatError extends Error {
 }
 
 export class CircularError extends Error {
-    type: string = "REF!";
+    type: string = "CIRCLE!";
     constructor(command: string) {
         super("");
         this.message = `Circular dependency detected.\nPlease revise your ${command} formula!`;
