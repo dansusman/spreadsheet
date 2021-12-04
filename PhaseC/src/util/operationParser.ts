@@ -39,12 +39,13 @@ export class FunctionParser {
         regex: RegExp,
         command: string
     ): {
-        result: string;
-        length: number;
+        matches: RegExpMatchArray[];
+        functions: string[];
+        lengths: number[];
     } {
         var result = this.contents;
         const matches = Array.from(result.matchAll(regex));
-        var boxCount = 0;
+        var lengths: number[] = [];
         const functions = matches.map((sums: any) => {
             const boxCorners: any[] = sums[1]
                 .split("..")
@@ -102,33 +103,43 @@ export class FunctionParser {
                     eqs = [`(${eq.replace("=", "")})`, ...eqs];
                 }
             }
-            boxCount = eqs.length;
+            lengths.push(eqs.length);
             return eqs
                 .splice(1)
                 .reduce((prev, curr) => `${curr} + ${prev}`, eqs[0]);
         });
-        matches.forEach((match, index) => {
-            result = result.replace(match[0], `(${functions[index]})`);
-        });
-        return { result, length: boxCount };
+        return { matches, functions, lengths };
     }
 
     sum(): void {
         if (this.contents.includes("SUM")) {
             const regex = /SUM\(([^)]+)\)/g;
-            const { result } = this.applyRegExOnRange(regex, "SUM");
-            this.contents = result;
+            const { matches, functions } = this.applyRegExOnRange(regex, "SUM");
+            matches.forEach((match, index) => {
+                this.contents = this.contents.replace(
+                    match[0],
+                    `(${functions[index]})`
+                );
+            });
         }
     }
 
     avg(): void {
         if (this.contents.includes("AVG")) {
             const regex = /AVG\(([^)]+)\)/g;
-            const { result, length } = this.applyRegExOnRange(regex, "AVG");
-            if (length === 0) {
+            const { matches, functions, lengths } = this.applyRegExOnRange(
+                regex,
+                "AVG"
+            );
+            if (lengths.includes(0)) {
                 throw new FormatError("AVG");
             }
-            this.contents = `${result} / ${length}`;
+            matches.forEach((match, index) => {
+                this.contents = this.contents.replace(
+                    match[0],
+                    `(${functions[index]}) / ${lengths[index]}`
+                );
+            });
         }
     }
 
@@ -203,9 +214,9 @@ export class FunctionParser {
         }
         if (this.contents.startsWith("=")) {
             try {
-                const isFunction = this.refs();
                 this.sum();
                 this.avg();
+                const isFunction = this.refs();
                 if (this.contents.startsWith("=")) {
                     this.contents = this.contents.substring(1);
                 }
