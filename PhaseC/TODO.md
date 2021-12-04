@@ -27,6 +27,9 @@
 -   [x] REF
 -   [x] string concat
 
+-   Clear Contents of single cell
+-   Clear whole spreadsheet
+
 # TESTING
 
 -   cells containing values and various types of formulas
