@@ -3,10 +3,6 @@ import { cartesianToString } from "./gridCoords";
 
 export class CellObservable {
     private observers: CellObserver[] = [];
-    readonly coords: CartesianPair;
-    constructor(coords: CartesianPair) {
-        this.coords = coords;
-    }
     notify() {
         this.observers.forEach((obs: CellObserver) => {
             obs.update();
@@ -49,7 +45,7 @@ export class CellObserverStore {
             };
         } else {
             const observer = new CellObserver(coords, updateFunc);
-            const observable = new CellObservable(coords);
+            const observable = new CellObservable();
             this.observerStore.set(cartesianToString(coords), observer);
             this.store.set(cartesianToString(coords), observable);
             return { observer, observable };
