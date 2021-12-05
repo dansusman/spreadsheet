@@ -29,7 +29,12 @@ const useSub = (coords: CartesianPair) => {
     return { shouldUpdate, observable, observer };
 };
 
-export const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) => {
+export const GridCell: React.FC<Props> = ({
+    cell,
+    setSelectedCell,
+    col,
+    row,
+}) => {
     const [cellContent, setCellContent] = useState("");
     const [cellColor, setCellColor] = useState(cell.color);
     const [error, setError] = useState("");
@@ -92,6 +97,7 @@ export const GridCell: React.FC<Props> = ({ cell, setSelectedCell, col, row }) =
     useEffect(() => {
         setError("");
         handleParse();
+        // eslint-disable-next-line
     }, [cell.content, shouldUpdate]);
 
     useEffect(() => {

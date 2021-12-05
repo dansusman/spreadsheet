@@ -96,4 +96,4 @@ const reducer: Reducer<GridState> = (
     }
 };
 
-export default { reducer, makeCells };
+export default reducer;
