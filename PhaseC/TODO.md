@@ -28,12 +28,11 @@
 -   [x] string concat
 
 -   [x] Clear Contents of single cell
--   [ ] Clear whole spreadsheet
--   [ ] Update Favicon
+-   [x] Update Favicon
 
 # BUGS:
 
-1. Add Column seems to add to the end, or something...
+- [x] Add Column seems to add to the end, or something...
 
 # TESTING
 
