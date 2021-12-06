@@ -50,8 +50,8 @@ export const deleteRow: ActionCreator<DeleteRowAction> = (
         };
     }
     const new_grid = [
-        ...state.grid.slice(0, row + 1),
-        ...state.grid.slice(row + 2),
+        ...state.grid.slice(0, row),
+        ...state.grid.slice(row + 1),
     ];
 
     return {
