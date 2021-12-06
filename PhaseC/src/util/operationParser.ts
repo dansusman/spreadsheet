@@ -272,6 +272,6 @@ export class FunctionParser {
                 return { content: "", error, dependencies: this.dependencies };
             }
         }
-        return { content: this.contents, dependencies: this.dependencies };
+        return { content: this.contents.trim(), dependencies: this.dependencies };
     }
 }
