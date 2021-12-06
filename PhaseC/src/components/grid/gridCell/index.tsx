@@ -26,9 +26,10 @@ export interface Props {
 }
 
 /**
- * Helper function that subscribes a cell to an appropriate CellObserver
- * via mapping the given CartesianPair to the cell at that
- * location in the grid.
+ * Custom hook used to add a new Observerable to our ObserverStore.
+ * Hook takens in a CartesianPair representing a cell and returns
+ * a shouldUpdate value to retrigger renders, the observerable and
+ * observer mapped to the given coords.
  */
 const useSub = (coords: CartesianPair) => {
     const [shouldUpdate, setShouldUpdate] = useState(0);
@@ -40,7 +41,7 @@ const useSub = (coords: CartesianPair) => {
 /**
  * The GridCell React Functional Component, which represents each cell in
  * the spreadsheet grid. Stores state, talks to dependencies, and is
- * updated via Redux actions.
+ * updated via changes to dependencies or Redux actions.
  */
 export const GridCell: React.FC<Props> = ({
     cell,
