@@ -1,14 +1,16 @@
 import { combineReducers, Reducer } from "redux";
-
-// Import your state types and reducers here.
-import { GridState } from "./grid/types";
 import gridReducer from "./grid/reducer";
+import { GridState } from "./grid/types";
 
-// The top-level state object
+/**
+ * The top-level state object
+ */
 export interface ApplicationState {
     grid: GridState;
 }
-
+/**
+ * The reducers used for updating the Redux store.
+ */
 export const reducers: Reducer<ApplicationState> =
     combineReducers<ApplicationState>({
         grid: gridReducer,

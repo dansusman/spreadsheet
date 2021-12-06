@@ -1,9 +1,12 @@
+import RedoRoundedIcon from "@mui/icons-material/RedoRounded";
+import UndoRoundedIcon from "@mui/icons-material/UndoRounded";
+import { Theme } from "@mui/material";
+import Button from "@mui/material/Button";
+import { purple } from "@mui/material/colors";
+import { SxProps } from "@mui/system";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ApplicationState } from "../../store";
-import Button from "@mui/material/Button";
-import UndoRoundedIcon from "@mui/icons-material/UndoRounded";
-import RedoRoundedIcon from "@mui/icons-material/RedoRounded";
 import {
     addColumn,
     addRow,
@@ -13,13 +16,11 @@ import {
     replaceContent,
     undo,
 } from "../../store/grid/actions";
-import "./TopBar.css";
-import { purple } from "@mui/material/colors";
-import { Theme } from "@mui/material";
-import { SxProps } from "@mui/system";
-import FillCellButton from "./fillCell";
 import { SelectedCell } from "../../types";
+import FillCellButton from "./fillCell";
+import "./TopBar.css";
 
+// Theme for each button (css)
 const buttonTheme: SxProps<Theme> = {
     mx: "10px",
     background: purple[100],
@@ -33,15 +34,23 @@ const buttonTheme: SxProps<Theme> = {
     },
 };
 
+/**
+ * Properties for the TopBar React component.
+ */
 interface Props {
     selectedCell: SelectedCell | null;
 }
 
+/**
+ * The TopBar React FunctionalComponent, which is shown at the very
+ * top of the spreadsheet application and holds all the buttons.
+ */
 const TopBar: React.FC<Props> = ({ selectedCell }) => {
     const dispatch = useDispatch();
     const spreadSheet = useSelector((state: ApplicationState) => state.grid);
     return (
         <div className="topBar">
+            {/* ------- Undo Button ------- */}
             <Button
                 sx={{ ...buttonTheme }}
                 variant="contained"
@@ -52,6 +61,7 @@ const TopBar: React.FC<Props> = ({ selectedCell }) => {
                     <span>Undo</span>
                 </div>
             </Button>
+            {/* ------- Redo Button ------- */}
             <Button
                 sx={{ ...buttonTheme }}
                 variant="contained"
@@ -62,6 +72,7 @@ const TopBar: React.FC<Props> = ({ selectedCell }) => {
                     <span>Redo</span>
                 </div>
             </Button>
+            {/* ------- Clear Cell Button ------- */}
             <Button
                 sx={{
                     ...buttonTheme,
@@ -83,6 +94,7 @@ const TopBar: React.FC<Props> = ({ selectedCell }) => {
             >
                 Clear Cell
             </Button>
+            {/* Add Row Button */}
             <Button
                 sx={{ ...buttonTheme }}
                 variant="contained"
@@ -92,6 +104,7 @@ const TopBar: React.FC<Props> = ({ selectedCell }) => {
             >
                 Add Row
             </Button>
+            {/*  ------- Delete Row Button ------- */}
             <Button
                 sx={{
                     ...buttonTheme,
@@ -103,6 +116,7 @@ const TopBar: React.FC<Props> = ({ selectedCell }) => {
             >
                 Delete Row
             </Button>
+            {/* ------- Add Column Button ------- */}
             <Button
                 sx={{
                     ...buttonTheme,
@@ -114,6 +128,7 @@ const TopBar: React.FC<Props> = ({ selectedCell }) => {
             >
                 Add Column
             </Button>
+            {/* ------- Delete Column Button ------- */}
             <Button
                 sx={{
                     ...buttonTheme,
@@ -127,6 +142,7 @@ const TopBar: React.FC<Props> = ({ selectedCell }) => {
             >
                 Delete Column
             </Button>
+            {/* ------- Fill Cell Button ------- */}
             <FillCellButton
                 buttonTheme={buttonTheme}
                 selectedCell={selectedCell}

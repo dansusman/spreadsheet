@@ -15,6 +15,9 @@ import { StringParser } from "../../../util/stringParser";
 import ErrorHelper from "./errorHelper";
 import "./GridCell.css";
 
+/**
+ * Properties for the GridCell component.
+ */
 export interface Props {
     cell: Cell;
     setSelectedCell: (s: SelectedCell | null) => void;
@@ -22,6 +25,12 @@ export interface Props {
     row: number;
 }
 
+/**
+ * Custom hook used to add a new Observerable to our ObserverStore.
+ * Hook takens in a CartesianPair representing a cell and returns
+ * a shouldUpdate value to retrigger renders, the observerable and
+ * observer mapped to the given coords.
+ */
 const useSub = (coords: CartesianPair) => {
     const [shouldUpdate, setShouldUpdate] = useState(0);
     var { observer, observable }: SubscriptionBundle =
@@ -29,26 +38,39 @@ const useSub = (coords: CartesianPair) => {
     return { shouldUpdate, observable, observer };
 };
 
+/**
+ * The GridCell React Functional Component, which represents each cell in
+ * the spreadsheet grid. Stores state, talks to dependencies, and is
+ * updated via changes to dependencies or Redux actions.
+ */
 export const GridCell: React.FC<Props> = ({
     cell,
     setSelectedCell,
     col,
     row,
 }) => {
+    // Sets the text content of this GridCell
     const [cellContent, setCellContent] = useState("");
+    // Sets the color of this GridCell
     const [cellColor, setCellColor] = useState(cell.color);
+    // Sets the state of this GridCell to error, if needed
     const [error, setError] = useState("");
+    // access Redux dispatch method to apply changes to the store
     const dispatch = useDispatch();
     const ref = useRef<HTMLInputElement>(null);
+    // select the state of this cell from the Redux store
     const state = useSelector((state: ApplicationState) => state.grid);
     const grid = state.grid;
     const repeatCharacterCount = Math.ceil((col + 1) / 26);
     const character: string = String.fromCharCode(97 + (col % 26));
     const cellName = `${character.repeat(repeatCharacterCount)}${row + 1}`;
+    // the display for an error (changes background of cell to light red)
     const errorTheme = error ? { background: red[50] } : {};
 
     const { shouldUpdate, observable, observer } = useSub({ x: col, y: row });
 
+    // reset dependencies in the store for the given observables (list
+    // of cell locations)
     const updateDependencies = (deps: CartesianPair[]) => {
         CellObserverStore.getInstance().resetListenersInObservable(
             deps,
@@ -56,6 +78,7 @@ export const GridCell: React.FC<Props> = ({
         );
     };
 
+    // Parse the contents of a GridCell
     const handleParse = () => {
         if (cell.content.startsWith("=")) {
             const parsed = new FunctionParser(grid, cell.content.trim(), {
@@ -76,6 +99,7 @@ export const GridCell: React.FC<Props> = ({
         }
         observable.notify();
     };
+    // Submit the content of the cell to the Redux store
     const submitContent = () => {
         if (cellContent !== cell.content) {
             dispatch(replaceContent(state, cellContent, row, col));
@@ -85,6 +109,8 @@ export const GridCell: React.FC<Props> = ({
         }
     };
 
+    // Handle "Enter" keyboard click by submitting content
+    // and deselecting the currently selected GridCell
     const handleKeys = (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
             submitContent();
@@ -94,12 +120,16 @@ export const GridCell: React.FC<Props> = ({
         }
     };
 
+    // Parse content for expressions anytime
+    // the cell's content or dependencies change
     useEffect(() => {
         setError("");
         handleParse();
         // eslint-disable-next-line
     }, [cell.content, shouldUpdate]);
 
+    // Set the color of the GridCell anytime the corresponding
+    // business logic Cell object's color changes
     useEffect(() => {
         setCellColor(cell.color);
     }, [cell.color]);

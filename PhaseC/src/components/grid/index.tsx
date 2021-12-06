@@ -1,24 +1,32 @@
 import React from "react";
-import { Cell } from "../../store/grid/types";
-import GridCell from "./gridCell";
-import "./Grid.css";
 import { useSelector } from "react-redux";
 import { ApplicationState } from "../../store";
+import { Cell } from "../../store/grid/types";
 import { SelectedCell } from "../../types";
 import { getColHeaders } from "../../util/gridCoords";
+import "./Grid.css";
+import GridCell from "./gridCell";
 
+/**
+ * Properties for the Grid React Component.
+ */
 interface Props {
     setSelectedCell: (s: SelectedCell | null) => void;
 }
 
+/**
+ * The Grid React Functional Component, which comprises
+ * a bunch of GridCell objects and the header row and column.
+ */
 const Grid: React.FC<Props> = ({ setSelectedCell }) => {
+    // Grab the state of the whole grid from the Redux store
     const grid: Cell[][] = useSelector(
         (state: ApplicationState) => state.grid.grid
     );
+    // Grab the number of columns from Redux store
     const columns: number = useSelector(
         (state: ApplicationState) => state.grid.columns
     );
-
     const colHeaders = getColHeaders(columns);
     return (
         <div className="grid">
