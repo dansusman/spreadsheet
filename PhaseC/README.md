@@ -6,7 +6,7 @@ Please see the report for details/specifications about the application's archite
 
 ## Installation
 To install and run our Spreadsheet application, you will first need to ensure your version of Node.JS is up-to-date. We recommend 
-version 16.13 or later. You can download it from [https://nodejs.org/en/](here). Clone the repository or download the zip file of the final-submission 
+version 16.13 or later. You can download it from (https://nodejs.org/en/)[here]. Clone the repository or download the zip file of the final-submission 
 release on GitHub. See [https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases](this resource) for more information about releases. Once the download succeeds, open a terminal and change 
 directory into the downloaded source code. Change directory again into the PhaseC subdirectory. Once here, run `npm i` or `yarn` to install 
 all necessary dependencies. You can install yarn by following [https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable](this guide) and npm following [https://docs.npmjs.com/downloading-and-installing-node-js-and-npm](this guide). Once your yarn or npm installation has 
