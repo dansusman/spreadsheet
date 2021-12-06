@@ -329,14 +329,6 @@ describe("Parsing Tests", () => {
 
     // ERROR SCENARIOS
 
-    it("cell referencing itself", () => {
-        modifiedGrid[0][0].content = "= REF(A1)";
-
-        let parsedCell = new FunctionParser(modifiedGrid, modifiedGrid[0][0].content.trim(), { y: 0, x: 0 });
-
-        expect(parsedCell.evaluate().error?.errorType).to.deep.equal("CIRCLE!");
-    });
-
     it("cell calling REF on itself", () => {
         modifiedGrid[0][0].content = "= REF(A1)";
 
@@ -368,14 +360,6 @@ describe("Parsing Tests", () => {
         let parsedCell = new FunctionParser(modifiedGrid, modifiedGrid[0][0].content.trim(), { y: 0, x: 0 });
 
         expect(parsedCell.evaluate().error?.errorType).to.deep.equal("OVERFLOW!");
-    });
-
-    it("referencing cell outside grid", () => {
-        modifiedGrid[0][0].content = "= REF(Z1)";
-
-        let parsedCell = new FunctionParser(modifiedGrid, modifiedGrid[0][0].content.trim(), { y: 0, x: 0 });
-
-        expect(parsedCell.evaluate().error?.errorType).to.deep.equal("REF!");
     });
 
     it("referencing cell outside grid", () => {
