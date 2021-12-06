@@ -15,7 +15,7 @@
 
 # Other
 
--   [x] Undo/Redo
+-   Undo/Redo
 -   [x] Error detection
 -   [x] Recompute when equation's dependencies change
 -   [x] Parsing for equations (mathJS, custom str concat)
@@ -65,33 +65,35 @@
         -   Check that content is submitted to the grid state
 
 -   Util
-    -   Parsing: Basic Arithmetic
-        -   Check every operation
-        -   Order of operations (parenthesis)
-    -   Parsing: SUM
-        -   Make sure whole range is being summed
-        -   Summing REFs and AVGs
-        -   Summing a large rectangle of cells
-        -   Circularity
-        -   Updating sum when cell in range is updated
-    -   Parsing: REF
-        -   Basic REF
-        -   Empty REF
-        -   Referencing cell w SUM or AVG
-        -   Referencing another REF
-        -   Update REF when the reference (or reference of reference) is changed
-            -   Both deletion and modification
-    -   Parsing: AVG
-        -   Basic AVG range
-        -   AVG of SUM or REFs
-        -   Updating AVG when cell in range is updated
+    -   General
+        -   [x] Range functions and arithmetic without equals sign
+        -   [x] Circularity
+        -   [x] Errors
+
+    -   [x] Parsing: Basic Arithmetic
+        -   [x] Check every operation
+        -   [x] Order of operations (parens)
+    -   [x] Parsing: SUM
+        -   [x] Basic SUM range
+        -   [x] SUM REFs and AVGs
+        -   [x] SUM a large range of cells
+        -   [x] Updating sum when cell in range is updated
+    -   [x] Parsing: REF
+        -   [x] Basic REF
+        -   [x] Empty REF
+        -   [x] REF cell w SUM/AVG
+        -   [x] REF another REF
+        -   [x] Update REF when the reference (or reference of reference) is changed
+            -   [x] Both deletion and modification
+    -   [x] Parsing: AVG
+        -   [x] Basic AVG range
+        -   [x] AVG a large range of cells
+        -   [x] AVG of SUMs/REFs
+        -   [x] Updating AVG when cell in range is updated
         
-    -   String Concat
-        -   Concatenating two normal strings
-        -   Concat multiple strings
-        -   One string and one not ("zip" + "zap)
-        -   Open quote(s)
-        -   Concat with a number ("zip" + 4)
-
-
-
+    -   [x] String Concat
+        -   [x] Concat two normal strings
+        -   [x] Concat multiple strings
+        -   [x] Concat string with non-string
+        -   [x] Open quote(s)
+        -   [x] Concat with a number ("zip" + 4)

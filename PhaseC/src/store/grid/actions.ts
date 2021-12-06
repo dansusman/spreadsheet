@@ -1,17 +1,15 @@
 import { ActionCreator } from "redux";
 import {
-    AddRowAction,
-    AddColumnAction,
-    DeleteRowAction,
-    GridState,
-    Cell,
-    DeleteColumnAction,
-    UndoAction,
-    RedoAction,
-    ReplaceContentAction,
-    FillCellAction,
+    AddColumnAction, AddRowAction, Cell,
+    DeleteColumnAction, DeleteRowAction, FillCellAction, GridState, RedoAction,
+    ReplaceContentAction, UndoAction
 } from "./types";
 
+/**
+ * Adds a new row of empty cells above the row at the given location.
+ * @param state the current state of the Redux Store
+ * @param row the row above which to add a new row
+ */
 export const addRow: ActionCreator<AddRowAction> = (
     state: GridState,
     row: number
@@ -35,6 +33,11 @@ export const addRow: ActionCreator<AddRowAction> = (
     };
 };
 
+/**
+ * Deletes the row found at the given location.
+ * @param state the current state of the Redux store
+ * @param row the row to delete from the store
+ */
 export const deleteRow: ActionCreator<DeleteRowAction> = (
     state: GridState,
     row: number
@@ -67,6 +70,11 @@ export const deleteRow: ActionCreator<DeleteRowAction> = (
     };
 };
 
+/**
+ * Adds a new column of empty cells left of the given location.
+ * @param state the current state of the Redux store
+ * @param col the column number left of which to add a new column
+ */
 export const addColumn: ActionCreator<AddColumnAction> = (
     state: GridState,
     col: number
@@ -93,10 +101,17 @@ export const addColumn: ActionCreator<AddColumnAction> = (
     };
 };
 
+/**
+ * Deletes the column at the given location from the store.
+ * @param state the current state of the Redux store
+ * @param col the column to delete
+ */
 export const deleteColumn: ActionCreator<DeleteColumnAction> = (
     state: GridState,
     col: number
 ) => {
+    // disallow removing the one and only column (always require there
+    // to be at least one column in the grid)
     if (state.columns === 1) {
         return {
             type: "@@grid/DELETE_COLUMN",
@@ -129,6 +144,10 @@ export const deleteColumn: ActionCreator<DeleteColumnAction> = (
     };
 };
 
+/**
+ * Undoes the previous action to the Redux store.
+ * @param state the current state of the Redux store
+ */
 export const undo: ActionCreator<UndoAction> = (state: GridState) => {
     if (state.undoStack.length < 1) {
         return {
@@ -152,6 +171,10 @@ export const undo: ActionCreator<UndoAction> = (state: GridState) => {
     };
 };
 
+/**
+ * Redoes the previously undone action and applies to the Redux store.
+ * @param state the current state of the Redux store
+ */
 export const redo: ActionCreator<RedoAction> = (state: GridState) => {
     if (state.redoStack.length < 1) {
         return {
@@ -176,6 +199,14 @@ export const redo: ActionCreator<RedoAction> = (state: GridState) => {
     };
 };
 
+/**
+ * Replaces the text content of the cell with the specified coordinates
+ * to have the given content.
+ * @param state the current state of the Redux store
+ * @param content the contents to add to the cell
+ * @param rowNum the row of the cell to update
+ * @param colNum the column of the cell to update
+ */
 export const replaceContent: ActionCreator<ReplaceContentAction> = (
     state: GridState,
     content: string,
@@ -198,6 +229,14 @@ export const replaceContent: ActionCreator<ReplaceContentAction> = (
     };
 };
 
+/**
+ * Replaces the color of the cell with the specified coordinates
+ * to have the given color.
+ * @param state the current state of the Redux store
+ * @param newColor the desired new color for the cell
+ * @param rowNum the row of the cell to update
+ * @param colNum the column of the cell to update
+ */
 export const fillCell: ActionCreator<FillCellAction> = (
     state: GridState,
     newColor: string,

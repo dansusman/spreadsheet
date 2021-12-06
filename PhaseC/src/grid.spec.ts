@@ -7,6 +7,7 @@ import { initialState, makeCells } from './store/grid/reducer';
 import { Cell, GridState, GridActions, GridHistory } from './store/grid/types';
 import { FunctionParser } from './util/operationParser';
 
+
 describe("Grid Tests", () => {
     let makeGrid = function (rows: number, cols: number) {
         let grid: Cell[][] = [];
@@ -19,14 +20,20 @@ describe("Grid Tests", () => {
             grid = [...grid, r];
         }
         return grid;
-    }
+    };
 
     let ROWS = 2;
     let COLS = 2;
 
     let initialGrid = makeGrid(ROWS, COLS);
 
-    let gridState: GridState = { grid: initialGrid, rows: ROWS, columns: COLS, redoStack: [], undoStack: [] };
+    let gridState: GridState = {
+        grid: initialGrid,
+        rows: ROWS,
+        columns: COLS,
+        redoStack: [],
+        undoStack: [],
+    };
 
     // ADDING ROW TESTS
     it("add row to top of grid", () => {
@@ -36,6 +43,7 @@ describe("Grid Tests", () => {
 
         gridState = initialState;
     });
+<<<<<<< HEAD
 
     it("add row to end of grid", () => {
         gridState = { grid: makeGrid(ROWS, COLS), rows: ROWS, columns: COLS, redoStack: [], undoStack: [] };
@@ -416,3 +424,6 @@ describe("Grid Tests", () => {
 
 
 });
+=======
+});
+>>>>>>> 98ba41ab6812dec987b982471183b293fe366405

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Grid from "./components/grid";
-import TopBar from "./components/topBar";
 import "./App.css";
 import FXBar from "./components/fxBar";
+import Grid from "./components/grid";
+import TopBar from "./components/topBar";
 import { SelectedCell } from "./types";
 
 function App() {
