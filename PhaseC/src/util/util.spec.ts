@@ -32,6 +32,8 @@ describe("Parsing Tests", () => {
         modifiedGrid = JSON.parse(JSON.stringify(initialGrid));
     });
 
+    // BASIC ARITHMETIC TESTING
+
     it("attempt arithmetic without equals sign", () => {
         modifiedGrid[0][0].content = "2 + 3";
 
@@ -124,6 +126,8 @@ describe("Parsing Tests", () => {
         expect(parsedCell.evaluate().content).to.deep.equal("70");
     });
 
+    // AVG FUNCTION TESTING
+
     it("attempt AVG without equals sign", () => {
         modifiedGrid[0][0].content = "AVG(A2..A3)";
 
@@ -191,6 +195,8 @@ describe("Parsing Tests", () => {
 
         expect(parsedCell.evaluate().content).to.deep.equal("15");
     });
+
+    // REF FUNCTION TESTING
 
     it("attempt REF without equals sign", () => {
         modifiedGrid[0][0].content = "REF(A2)";
@@ -271,6 +277,8 @@ describe("Parsing Tests", () => {
         expect(parsedCell.evaluate().content).to.deep.equal("zip");
     });
 
+    // STRING CONCAT TESTING
+
     it("basic string concat", () => {
         modifiedGrid[0][0].content = "\"zip\" + \"zap\"";
 
@@ -317,5 +325,72 @@ describe("Parsing Tests", () => {
         let parsedCell = new StringParser(modifiedGrid[0][0].content);
 
         expect(parsedCell.evaluate()).to.deep.equal("\"zip + \"zap\"");
+    });
+
+    // ERROR SCENARIOS
+
+    it("cell calling REF on itself", () => {
+        modifiedGrid[0][0].content = "= REF(A1)";
+
+        let parsedCell = new FunctionParser(modifiedGrid, modifiedGrid[0][0].content.trim(), { y: 0, x: 0 });
+
+        expect(parsedCell.evaluate().error?.errorType).to.deep.equal("CIRCLE!");
+    });
+
+    it("cell calling AVG itself", () => {
+        modifiedGrid[0][0].content = "= AVG(A1..A2)";
+
+        let parsedCell = new FunctionParser(modifiedGrid, modifiedGrid[0][0].content.trim(), { y: 0, x: 0 });
+
+        expect(parsedCell.evaluate().error?.errorType).to.deep.equal("CIRCLE!");
+    });
+
+    it("cell calling SUM itself", () => {
+        modifiedGrid[0][0].content = "= SUM(A1..A2)";
+
+        let parsedCell = new FunctionParser(modifiedGrid, modifiedGrid[0][0].content.trim(), { y: 0, x: 0 });
+
+        expect(parsedCell.evaluate().error?.errorType).to.deep.equal("CIRCLE!");
+    });
+
+    it("cells referencing each other", () => {
+        modifiedGrid[0][0].content = "= REF(B1)";
+        modifiedGrid[0][1].content = "= REF(A1)";
+
+        let parsedCell = new FunctionParser(modifiedGrid, modifiedGrid[0][0].content.trim(), { y: 0, x: 0 });
+
+        expect(parsedCell.evaluate().error?.errorType).to.deep.equal("OVERFLOW!");
+    });
+
+    it("referencing cell outside grid", () => {
+        modifiedGrid[0][0].content = "= REF(Z1)";
+
+        let parsedCell = new FunctionParser(modifiedGrid, modifiedGrid[0][0].content.trim(), { y: 0, x: 0 });
+
+        expect(parsedCell.evaluate().error?.errorType).to.deep.equal("REF!");
+    });
+
+    it("reference a nonexistent cell", () => {
+        modifiedGrid[0][0].content = "= REF(A0)";
+
+        let parsedCell = new FunctionParser(modifiedGrid, modifiedGrid[0][0].content.trim(), { y: 0, x: 0 });
+
+        expect(parsedCell.evaluate().error?.errorType).to.deep.equal("ERROR!");
+    });
+
+    it("function with too many arguments", () => {
+        modifiedGrid[0][0].content = "= SUM(A1..A2..A3)";
+
+        let parsedCell = new FunctionParser(modifiedGrid, modifiedGrid[0][0].content.trim(), { y: 0, x: 0 });
+
+        expect(parsedCell.evaluate().error?.errorType).to.deep.equal("FORMAT!");
+    });
+
+    it("function with not enough arguments", () => {
+        modifiedGrid[0][0].content = "= AVG(A1)";
+
+        let parsedCell = new FunctionParser(modifiedGrid, modifiedGrid[0][0].content.trim(), { y: 0, x: 0 });
+
+        expect(parsedCell.evaluate().error?.errorType).to.deep.equal("FORMAT!");
     });
 });

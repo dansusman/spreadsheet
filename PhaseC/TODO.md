@@ -67,8 +67,8 @@
 -   Util
     -   General
         -   [x] Range functions and arithmetic without equals sign
-        -   Circularity
-        -   Errors
+        -   [x] Circularity
+        -   [x] Errors
 
     -   [x] Parsing: Basic Arithmetic
         -   [x] Check every operation
@@ -97,6 +97,3 @@
         -   [x] Concat string with non-string
         -   [x] Open quote(s)
         -   [x] Concat with a number ("zip" + 4)
-
-
-
