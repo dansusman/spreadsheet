@@ -27,7 +27,7 @@ export interface Props {
 
 /**
  * Custom hook used to add a new Observerable to our ObserverStore.
- * Hook takens in a CartesianPair representing a cell and returns
+ * Hook takes in a CartesianPair representing a cell and returns
  * a shouldUpdate value to retrigger renders, the observerable and
  * observer mapped to the given coords.
  */
