@@ -56,6 +56,9 @@ export class FunctionParser {
         const matches = Array.from(result.matchAll(regex));
         var lengths: number[] = [];
         const functions = matches.map((sums: any) => {
+            if (!this.contents.includes("..")) {
+                throw new FormatError(command);
+            }
             // get the numeric representation of each Cell header
             const boxCorners: any[] = sums[1]
                 .split("..")
