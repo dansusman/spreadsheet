@@ -1,11 +1,7 @@
 import { expect } from 'chai';
-import { number } from 'mathjs';
-
-import { Props, GridCell } from './components/grid/gridCell/index';
 import { addRow, deleteRow, addColumn, deleteColumn, undo, redo, replaceContent, fillCell } from './store/grid/actions';
-import { initialState, makeCells } from './store/grid/reducer';
-import { Cell, GridState, GridActions, GridHistory } from './store/grid/types';
-import { FunctionParser } from './util/operationParser';
+import { initialState } from './store/grid/reducer';
+import { Cell, GridState, GridHistory } from './store/grid/types';
 
 
 describe("Grid Tests", () => {
