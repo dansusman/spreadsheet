@@ -1,11 +1,16 @@
 import { expect } from "chai";
 import {
-    addColumn, addRow, deleteColumn, deleteRow, fillCell, redo,
-    replaceContent, undo
+    addColumn,
+    addRow,
+    deleteColumn,
+    deleteRow,
+    fillCell,
+    redo,
+    replaceContent,
+    undo,
 } from "./store/grid/actions";
 import { initialState } from "./store/grid/reducer";
 import { Cell, GridHistory, GridState } from "./store/grid/types";
-
 
 describe("Grid Tests", () => {
     let makeGrid = function (rows: number, cols: number) {
