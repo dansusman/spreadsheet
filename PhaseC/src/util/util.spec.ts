@@ -393,4 +393,12 @@ describe("Parsing Tests", () => {
 
         expect(parsedCell.evaluate().error?.errorType).to.deep.equal("FORMAT!");
     });
+
+    it("function without .. operator", () => {
+        modifiedGrid[0][0].content = "= AVG(A1, A2)";
+
+        let parsedCell = new FunctionParser(modifiedGrid, modifiedGrid[0][0].content.trim(), { y: 0, x: 0 });
+
+        expect(parsedCell.evaluate().error?.errorType).to.deep.equal("FORMAT!");
+    });
 });
