@@ -17,6 +17,11 @@ import {
 } from "./gridCoords";
 import { StringParser } from "./stringParser";
 
+/**
+ * A Parser object to parse a Cell's contents for possibly
+ * valid and possibly invalid expressions. This includes
+ * mathematical expressions, SUMs, AVGs, and REFs.
+ */
 export class FunctionParser {
     private grid: Cell[][];
     private contents: string;
@@ -35,6 +40,10 @@ export class FunctionParser {
         this.depth = depth;
     }
 
+    /**
+     * Look for SUM or AVG, validate expression if found, and
+     * return any matches, functions, and the lengths of expressions.
+     */
     applyRegExOnRange(
         regex: RegExp,
         command: string
@@ -47,6 +56,7 @@ export class FunctionParser {
         const matches = Array.from(result.matchAll(regex));
         var lengths: number[] = [];
         const functions = matches.map((sums: any) => {
+            // get the numeric representation of each Cell header
             const boxCorners: any[] = sums[1]
                 .split("..")
                 .map((reference: string) => {
@@ -56,28 +66,12 @@ export class FunctionParser {
                 throw new FormatError(command);
             }
 
-            const minCol = Math.min(boxCorners[0].x, boxCorners[1].x);
-            const maxCol = Math.max(boxCorners[0].x, boxCorners[1].x);
-            const minRow = Math.min(boxCorners[0].y, boxCorners[1].y);
-            const maxRow = Math.max(boxCorners[0].y, boxCorners[1].y);
+            // grab vertices of rectangle (range)
+            const { maxCol, minCol, maxRow, minRow } =
+                this.boundingVertices(boxCorners);
 
-            if (
-                !isWithinGrid(this.grid, boxCorners[0]) ||
-                !isWithinGrid(this.grid, boxCorners[1])
-            ) {
-                throw new ReferenceError();
-            }
-            if (
-                isWithinRange(
-                    maxCol,
-                    minCol,
-                    maxRow,
-                    minRow,
-                    this.currentCoords
-                )
-            ) {
-                throw new CircularError(command);
-            }
+            // check for any errors
+            this.validate(boxCorners, maxCol, minCol, maxRow, minRow, command);
 
             var eqs: string[] = [];
 
@@ -111,6 +105,40 @@ export class FunctionParser {
         return { matches, functions, lengths };
     }
 
+    private boundingVertices(boxCorners: any[]) {
+        const minCol = Math.min(boxCorners[0].x, boxCorners[1].x);
+        const maxCol = Math.max(boxCorners[0].x, boxCorners[1].x);
+        const minRow = Math.min(boxCorners[0].y, boxCorners[1].y);
+        const maxRow = Math.max(boxCorners[0].y, boxCorners[1].y);
+        return { maxCol, minCol, maxRow, minRow };
+    }
+
+    private validate(
+        boxCorners: any[],
+        maxCol: number,
+        minCol: number,
+        maxRow: number,
+        minRow: number,
+        command: string
+    ) {
+        // check if either location is outside the grid;
+        // if so, throw a ReferenceError
+        if (
+            !isWithinGrid(this.grid, boxCorners[0]) ||
+            !isWithinGrid(this.grid, boxCorners[1])
+        ) {
+            throw new ReferenceError();
+        }
+        // check if the calling Cell is within the range;
+        // if so, throw a CircularError
+        if (isWithinRange(maxCol, minCol, maxRow, minRow, this.currentCoords)) {
+            throw new CircularError(command);
+        }
+    }
+
+    /**
+     * Check for SUM expression and evaluate if found.
+     */
     sum(): void {
         if (this.contents.includes("SUM")) {
             const regex = /SUM\(([^)]+)\)/g;
@@ -124,6 +152,9 @@ export class FunctionParser {
         }
     }
 
+    /**
+     * Check for AVG expression and evaluate if found.
+     */
     avg(): void {
         if (this.contents.includes("AVG")) {
             const regex = /AVG\(([^)]+)\)/g;
@@ -143,6 +174,10 @@ export class FunctionParser {
         }
     }
 
+    /**
+     * Check for REF expression and evaluate if found.
+     * @returns true if the referenced cell contains a function
+     */
     refs(): boolean {
         var isFunction = true;
         var result = this.contents;
@@ -151,6 +186,8 @@ export class FunctionParser {
             const matches = Array.from(result.matchAll(regex));
             const functions = matches.map((refs: any) => {
                 const refCoords = getExactPositionFromHeader(refs[1]);
+                // Check if the coords are outside grid;
+                // if so, throw ReferenceError
                 if (!isWithinGrid(this.grid, refCoords)) {
                     throw new ReferenceError(true);
                 }
@@ -195,10 +232,17 @@ export class FunctionParser {
         return isFunction;
     }
 
+    /**
+     * Evaluate the contents of a cell by parsing for expressions
+     * and applying any computation needed.
+     * @returns a ParserResponse, with any errors to display, dependencies
+     * the cell has, and the content for the cell
+     */
     evaluate(): ParserResponse {
         if (this.depth > 11) {
             throw new OverflowError();
         }
+        // if starts with "=", we have an expression
         if (this.contents.startsWith("=")) {
             try {
                 this.sum();
@@ -210,6 +254,7 @@ export class FunctionParser {
                 if (this.contents.startsWith("=")) {
                     this.contents = this.contents.replaceAll("=", "");
                 }
+                // if the referenced cell has a function, evaluate recursively
                 if (isFunction) {
                     return {
                         content: String(evaluate(this.contents)),
@@ -217,13 +262,13 @@ export class FunctionParser {
                     };
                 }
             } catch (e: any) {
+                // catch any errors and react accordingly
                 const error: ParserError = {
                     errorMessage: e.type
                         ? e.message
                         : `${e.message}\nPlease revise your cell input!`,
                     errorType: e.type || "ERROR!",
                 };
-                // TODO: may cause issues with depth
                 return { content: "", error, dependencies: this.dependencies };
             }
         }

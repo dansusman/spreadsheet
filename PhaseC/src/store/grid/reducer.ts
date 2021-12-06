@@ -1,10 +1,14 @@
 import { Reducer } from "redux";
-import { GridState, GridActions, Cell } from "./types";
+import { Cell, GridActions, GridState } from "./types";
 
 const NUM_ROWS: number = 15;
 const NUM_COLUMNS: number = 8;
 
-export const makeCells = () => {
+/**
+ * Makes a grid of empty cells with color WHITE and content = ""
+ * @returns a 2D array of Cell Objects, all empty
+ */
+export const makeCells: () => Cell[][] = () => {
     var grid: Cell[][] = [];
     for (let row = 0; row < NUM_ROWS; row++) {
         var r: Cell[] = [];
@@ -16,7 +20,11 @@ export const makeCells = () => {
     return grid;
 };
 
-// Type-safe initialState!
+/**
+ * Type-safe initial state of the Grid, with fully
+ * empty cells and of size rows by columns. Initially,
+ * the undoStack and redoStack are empty.
+ */
 export const initialState: GridState = {
     grid: makeCells(),
     rows: NUM_ROWS,
@@ -25,17 +33,21 @@ export const initialState: GridState = {
     undoStack: [],
 };
 
-// Unfortunately, typing of the `action` parameter seems to be broken at the moment.
-// This should be fixed in Redux 4.x, but for now, just augment your types.
-
+/**
+ * The reducer for GridState.
+ * @param state the state of the whole grid of cells, initially
+ * set to empty cells with empty undoStack and redoStack
+ * @param action the action to perform on the Redux store
+ * @returns
+ */
 const reducer: Reducer<GridState> = (
     state: GridState = initialState,
     action
 ) => {
-    // We'll augment the action type on the switch case to make sure we have
-    // all the cases handled.
+    // switch statement over the type of action to perform
     switch ((action as GridActions).type) {
         case "@@grid/ADD_ROW":
+            // perform add row action
             return {
                 ...state,
                 grid: action.payload.grid,
@@ -44,6 +56,7 @@ const reducer: Reducer<GridState> = (
                 undoStack: action.payload.undoStack,
             };
         case "@@grid/ADD_COLUMN":
+            // perform add column action
             return {
                 ...state,
                 grid: action.payload.grid,
@@ -52,6 +65,7 @@ const reducer: Reducer<GridState> = (
                 undoStack: action.payload.undoStack,
             };
         case "@@grid/DELETE_ROW":
+            // perform delete row action
             return {
                 ...state,
                 grid: action.payload.grid,
@@ -60,6 +74,7 @@ const reducer: Reducer<GridState> = (
                 undoStack: action.payload.undoStack,
             };
         case "@@grid/DELETE_COLUMN":
+            // perform delete column action
             return {
                 ...state,
                 grid: action.payload.grid,
@@ -68,16 +83,19 @@ const reducer: Reducer<GridState> = (
                 undoStack: action.payload.undoStack,
             };
         case "@@grid/UNDO":
+            // perform undo action
             return {
                 ...state,
                 ...action.payload.state,
             };
         case "@@grid/REDO":
+            // perform redo action
             return {
                 ...state,
                 ...action.payload.state,
             };
         case "@@grid/REPLACE_CONTENT":
+            // perform replace text content action
             return {
                 ...state,
                 grid: action.payload.grid,
@@ -85,6 +103,7 @@ const reducer: Reducer<GridState> = (
                 redoStack: [],
             };
         case "@@grid/FILL_CELL":
+            // perform fill cell with color action
             return {
                 ...state,
                 grid: action.payload.grid,

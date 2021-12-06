@@ -1,8 +1,5 @@
-import React, { useState } from "react";
-import { Button, Theme } from "@mui/material";
-import { SxProps } from "@mui/system";
 import FormatColorFillRoundedIcon from "@mui/icons-material/FormatColorFillRounded";
-import "./fillCell.css";
+import { Button, Theme } from "@mui/material";
 import {
     lightBlue,
     lightGreen,
@@ -11,11 +8,17 @@ import {
     red,
     yellow,
 } from "@mui/material/colors";
-import { SelectedCell } from "../../../types";
+import { SxProps } from "@mui/system";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fillCell } from "../../../store/grid/actions";
 import { ApplicationState } from "../../../store";
+import { fillCell } from "../../../store/grid/actions";
+import { SelectedCell } from "../../../types";
+import "./fillCell.css";
 
+/**
+ * Colors from MUI used in the FillCell Dropdown.
+ */
 const COLORS = {
     red: red[400],
     orange: orange[400],
@@ -25,23 +28,35 @@ const COLORS = {
     purple: purple[200],
 };
 
+/**
+ * Properties for FillCellOption React component.
+ */
 interface OptionProps {
     color: string;
     setDropDownState: (b: boolean) => void;
     selectedCell: SelectedCell | null;
 }
 
+/**
+ * The FillCellOption React Functional Component, which is displayed
+ * when the FillCell button is pressed in the top bar. Holds 6 color options
+ * Red, Orange, Yellow, Green, Blue, and Purple, each of which updates
+ * the selected cell's color.
+ */
 const FillCellOption: React.FC<OptionProps> = ({
     color,
     setDropDownState,
     selectedCell,
 }) => {
     const dispatch = useDispatch();
+    // grab the state of the grid from Redux store
     const state = useSelector((state: ApplicationState) => state.grid);
     const fillCellStyle = {
         background: color,
     };
 
+    // when color is clicked, dispatch the call to Redux that will
+    // apply the new cell color to the stored Cell object's color field
     const handleColorClick = () => {
         if (selectedCell) {
             dispatch(
@@ -59,11 +74,18 @@ const FillCellOption: React.FC<OptionProps> = ({
     );
 };
 
+/**
+ * Properties for the FillCellButton React component.
+ */
 interface Props {
     buttonTheme: SxProps<Theme>;
     selectedCell: SelectedCell | null;
 }
 
+/**
+ * The FillCellButton React Functional Component, which is last in the
+ * top bar of buttons.
+ */
 const FillCellButton: React.FC<Props> = ({ buttonTheme, selectedCell }) => {
     const [isDropdown, setIsDropDown] = useState(false);
     return (
@@ -78,8 +100,6 @@ const FillCellButton: React.FC<Props> = ({ buttonTheme, selectedCell }) => {
             >
                 <div className="label">
                     <FormatColorFillRoundedIcon />
-                    {/* TODO: Update color of FormatColorFillRoundedIcon to match selected color? */}
-                    {/* <FormatColorFillRoundedIcon htmlColor={COLORS.purple} /> */}
                     <span>Fill Cell</span>
                 </div>
                 {isDropdown && (
