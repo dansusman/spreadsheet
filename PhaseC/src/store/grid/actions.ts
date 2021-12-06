@@ -1,8 +1,15 @@
 import { ActionCreator } from "redux";
 import {
-    AddColumnAction, AddRowAction, Cell,
-    DeleteColumnAction, DeleteRowAction, FillCellAction, GridState, RedoAction,
-    ReplaceContentAction, UndoAction
+    AddColumnAction,
+    AddRowAction,
+    Cell,
+    DeleteColumnAction,
+    DeleteRowAction,
+    FillCellAction,
+    GridState,
+    RedoAction,
+    ReplaceContentAction,
+    UndoAction,
 } from "./types";
 
 /**
