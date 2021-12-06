@@ -175,16 +175,13 @@ export class FunctionParser {
                 if (answer.content.includes(`"`)) {
                     return new StringParser(answer.content).evaluate();
                 } else {
-                    return answer.content ? `=${answer.content}` : "= 0";
+                    return answer.content ? answer.content : "0";
                 }
             });
 
             matches.forEach((match, index) => {
                 if (functions[index].startsWith("=")) {
-                    result = result.replace(
-                        match[0],
-                        functions[index].replace("=", "")
-                    );
+                    result = result.replace(match[0], functions[index]);
                 } else {
                     isFunction = false;
                     result = result.replace(match[0], functions[index]);
@@ -207,8 +204,11 @@ export class FunctionParser {
                 this.sum();
                 this.avg();
                 const isFunction = this.refs();
+                if (this.contents.includes("==")) {
+                    throw new Error();
+                }
                 if (this.contents.startsWith("=")) {
-                    this.contents = this.contents.substring(1);
+                    this.contents = this.contents.replaceAll("=", "");
                 }
                 if (isFunction) {
                     return {
