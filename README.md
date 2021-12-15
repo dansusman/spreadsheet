@@ -1,5 +1,6 @@
-# CS4530_team_305
-Project repo for section 3, team 5
+# Spreadsheet Application
+
+This repository holds the source code for a simplified clone of Google Sheets. It is the submission for group 305 for CS4530 Software Engineering Fall 2021.
 
 ## Installation
 To install and run our Spreadsheet application, you will first need to ensure your version of Node.JS is up-to-date. We recommend 
